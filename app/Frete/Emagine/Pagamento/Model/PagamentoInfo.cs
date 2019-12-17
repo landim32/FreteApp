@@ -22,35 +22,9 @@ namespace Emagine.Pagamento.Model
         public int IdUsuario { get; set; }
 
         [JsonProperty("data_vencimento")]
-        public string _DataVencimento {
-            get {
-                return DataVencimento.ToString("yyyy-MM-dd HH:mm:ss");
-            }
-            set {
-                DateTime data = DateTime.MinValue;
-                if (DateTime.TryParseExact(value, "yyyy-MM-dd HH:mm:ss", new CultureInfo("pt-BR"), DateTimeStyles.None, out data)) {
-                    DataVencimento = data;
-                }
-            }
-        }
-
-        [JsonIgnore]
         public DateTime DataVencimento { get; set; }
 
         [JsonProperty("data_pagamento")]
-        public string _DataPagamento {
-            get {
-                return DataPagamento.ToString("yyyy-MM-dd HH:mm:ss");
-            }
-            set {
-                DateTime data = DateTime.MinValue;
-                if (DateTime.TryParseExact(value, "yyyy-MM-dd HH:mm:ss", new CultureInfo("pt-BR"), DateTimeStyles.None, out data)) {
-                    DataPagamento = data;
-                }
-            }
-        }
-
-        [JsonIgnore]
         public DateTime DataPagamento { get; set; }
 
         [JsonProperty("valor_desconto")]
@@ -162,19 +136,6 @@ namespace Emagine.Pagamento.Model
         public string ValorTotalStr {
             get {
                 return ValorTotal.ToString("N2");
-            }
-        }
-
-        [JsonIgnore]
-        public bool TemEndereco {
-            get {
-                return (
-                    !string.IsNullOrEmpty(this.Cep) &&
-                    !string.IsNullOrEmpty(this.Logradouro) &&
-                    !string.IsNullOrEmpty(this.Numero) &&
-                    !string.IsNullOrEmpty(this.Cidade) &&
-                    !string.IsNullOrEmpty(this.Uf)
-                );
             }
         }
 

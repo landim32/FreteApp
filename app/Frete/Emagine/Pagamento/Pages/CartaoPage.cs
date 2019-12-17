@@ -97,7 +97,7 @@ namespace Emagine.Pagamento.Pages
         public CartaoPage()
         {
             Title = "Forma de Pagamento";
-            Style = Estilo.Current[Estilo.TELA_EM_BRANCO];
+            Style = Estilo.Current[Estilo.TELA_PADRAO];
             inicializarComponente();
 
             _TipoDebitoGrid = new Grid
@@ -237,7 +237,7 @@ namespace Emagine.Pagamento.Pages
         private Frame gerarPainelValor() {
             return new Frame
             {
-                Style = Estilo.Current[EstiloTotal.TOTAL_FRAME],
+                Style = Estilo.Current[Estilo.TOTAL_FRAME],
                 Content = new StackLayout
                 {
                     Orientation = StackOrientation.Horizontal,
@@ -249,7 +249,7 @@ namespace Emagine.Pagamento.Pages
                         new Label {
                             VerticalOptions = LayoutOptions.Center,
                             HorizontalOptions = LayoutOptions.Start,
-                            Style = Estilo.Current[EstiloTotal.TOTAL_LABEL],
+                            Style = Estilo.Current[Estilo.TOTAL_LABEL],
                             Text = ": "
                         },
                         _totalLabel
@@ -274,7 +274,7 @@ namespace Emagine.Pagamento.Pages
             /*
             var bandeira = regraPagamento.pegarBandeiraPorNumeroCartao(_NumeroCartaoEntry.Text);
             if (!bandeira.HasValue) {
-
+                 
             }
             */
             if (_ValidadeCartaoPicker.SelectedItem == null)
@@ -299,7 +299,7 @@ namespace Emagine.Pagamento.Pages
             try
             {
                 var regraPagamento = PagamentoFactory.create();
-                var regraCartao = CartaoFactory.create();
+                var regraCartao = PagamentoCartaoFactory.create();
                 var regraUsuario = UsuarioFactory.create();
 
                 var usuario = regraUsuario.pegarAtual();
@@ -321,8 +321,7 @@ namespace Emagine.Pagamento.Pages
                             nomeApp = ((RootPage)App.Current.MainPage).NomeApp;
                         }
                         var mensagem = "Foram debitados R$ {0} do seu cartão de crédito.";
-                        var rootPage = (RootPage) App.Current.MainPage;
-                        CrossLocalNotifications.Current.Show(rootPage.NomeApp, string.Format(mensagem, pagamento.ValorTotalStr));
+                        CrossLocalNotifications.Current.Show(nomeApp, string.Format(mensagem, pagamento.ValorTotalStr));
                     }
                     UserDialogs.Instance.HideLoading();
                     AoEfetuarPagamento?.Invoke(this, pagamento);
@@ -336,8 +335,7 @@ namespace Emagine.Pagamento.Pages
             catch (Exception erro)
             {
                 UserDialogs.Instance.HideLoading();
-                //UserDialogs.Instance.Alert(erro.Message, "Erro", "Fechar");
-                await DisplayAlert("Erro", erro.Message, "Entendi");
+                UserDialogs.Instance.Alert(erro.Message, "Erro", "Fechar");
             }
         }
 
@@ -347,14 +345,14 @@ namespace Emagine.Pagamento.Pages
             {
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Start,
-                Style = Estilo.Current[EstiloTotal.TOTAL_LABEL],
+                Style = Estilo.Current[Estilo.TOTAL_LABEL],
                 Text = "Valor Cobrado: "
             };
             _totalLabel = new Label
             {
                 HorizontalOptions = LayoutOptions.Start,
                 VerticalOptions = LayoutOptions.Start,
-                Style = Estilo.Current[EstiloTotal.TOTAL_TEXTO],
+                Style = Estilo.Current[Estilo.TOTAL_TEXTO],
                 Text = "R$ 0,00",
             };
             _DebitoButton = new Button
@@ -411,7 +409,7 @@ namespace Emagine.Pagamento.Pages
                 VerticalOptions = LayoutOptions.Start,
                 Title = "Selecione a data"
             };
-            var regraCartao = CartaoFactory.create();
+            var regraCartao = PagamentoCartaoFactory.create();
             _ValidadeCartaoPicker.ItemsSource = regraCartao.listarValidadeCartao();
 
             _CVCartaoEntry = new Entry
@@ -470,7 +468,7 @@ namespace Emagine.Pagamento.Pages
         public static readonly BindableProperty UsaDebitoProperty = BindableProperty.Create(
             nameof(UsaDebito), typeof(bool), typeof(CartaoPage), default(bool),
             propertyChanged: UsaDebitoPropertyChanged
-        );
+        );      
 
         private static void UsaDebitoPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {

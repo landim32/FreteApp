@@ -87,9 +87,6 @@ namespace Emagine.Frete.Model
         [JsonProperty("direcao")]
         public float? Direcao { get; set; }
 
-        [JsonProperty("valor_hora")]
-        public double ValorHora { get; set; }
-
         [JsonIgnore]
         public MotoristaSituacaoEnum Situacao { get; set; }
 

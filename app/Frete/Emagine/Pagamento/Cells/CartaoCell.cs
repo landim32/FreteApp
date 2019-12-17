@@ -1,7 +1,5 @@
 ﻿using Emagine.Base.Estilo;
 using Emagine.Base.Utils;
-using Emagine.Pagamento.Model;
-using Emagine.Pagamento.Pages;
 using FormsPlugin.Iconize;
 using System;
 using System.Collections.Generic;
@@ -20,7 +18,6 @@ namespace Emagine.Pagamento.Cells
 
         public CartaoCell()
         {
-            inicializarMenu();
             inicializarComponente();
 
             View = new Frame
@@ -68,45 +65,6 @@ namespace Emagine.Pagamento.Cells
                     }
                 },
             };
-        }
-
-        private void inicializarMenu()
-        {
-            var removerButton = new MenuItem
-            {
-                Text = "Remover",
-                Icon = "fa-remove",
-                IsDestructive = true,
-                //IconColor = Estilo.Current.BarTitleColor,
-            };
-            removerButton.SetBinding(MenuItem.CommandParameterProperty, new Binding("."));
-            removerButton.Clicked += (sender, e) =>
-            {
-                var menu = (MenuItem)sender;
-                var listaPage = buscarPagina(this.Parent);
-                if (listaPage != null)
-                {
-                    var cartao = (CartaoInfo)menu.CommandParameter;
-                    listaPage.excluir(cartao);
-                }
-            };
-            ContextActions.Add(removerButton);
-        }
-
-        private CartaoListaPage buscarPagina(Element elemento)
-        {
-            if (elemento == null)
-            {
-                return null;
-            }
-            if (elemento is CartaoListaPage)
-            {
-                return (CartaoListaPage)elemento;
-            }
-            else
-            {
-                return buscarPagina(elemento.Parent);
-            }
         }
 
         private void inicializarComponente()

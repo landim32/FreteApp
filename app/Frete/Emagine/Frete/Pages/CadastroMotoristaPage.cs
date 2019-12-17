@@ -21,18 +21,12 @@ namespace Emagine.Frete.Pages
         protected DropDownList _TipoVeiculoEntry;
         protected DropDownList _CarroceriaEntry;
         protected XfxEntry _VeiculoEntry;
-        protected XfxEntry _CNHEntry;
+        private XfxEntry _CNHEntry;
         protected XfxEntry _PlacaEntry;
         protected XfxEntry _ANTTEntry;
-        protected XfxEntry _ValorHoraEntry;
         protected Button _CadastroButton;
 
-        public bool Gravar { get; set; } = true;
-
-        public event EventHandler<MotoristaInfo> AoCompletar;
-
         private UsuarioInfo _usuario;
-        private MotoristaInfo _motorista;
 
 
         public UsuarioInfo Usuario {
@@ -44,44 +38,9 @@ namespace Emagine.Frete.Pages
             }
         }
 
-        public virtual MotoristaInfo Motorista {
-            get {
-                if (_motorista == null) {
-                    _motorista = new MotoristaInfo();
-                }
-                TipoVeiculoInfo tipo = (TipoVeiculoInfo)_TipoVeiculoEntry.Value;
-                TipoCarroceriaInfo carroceria = (TipoCarroceriaInfo)_CarroceriaEntry.Value;
+        public bool Gravar { get; set; } = true;
 
-                double valorHora = 0;
-                double.TryParse(_ValorHoraEntry.Text, out valorHora);
-
-                if (_usuario != null) {
-                    _motorista.Id = _usuario.Id;
-                }
-                _motorista.IdTipo = tipo.Id;
-                _motorista.Placa = _PlacaEntry.Text;
-                _motorista.Veiculo = _VeiculoEntry.Text;
-                _motorista.ANTT = _ANTTEntry.Text;
-                _motorista.ValorHora = valorHora;
-                _motorista.Situacao = MotoristaSituacaoEnum.Ativo;
-                if (carroceria != null)
-                {
-                    _motorista.IdCarroceria = carroceria.Id;
-                }
-                return _motorista;
-            }
-            set {
-                _motorista = value;
-                if (_motorista != null) {
-                    _TipoVeiculoEntry.Value = _motorista.Tipo;
-                    _CarroceriaEntry.Value = _motorista.Carroceria;
-                    _PlacaEntry.Text = _motorista.Placa;
-                    _VeiculoEntry.Text = _motorista.Veiculo;
-                    _ANTTEntry.Text = _motorista.ANTT;
-                    _ValorHoraEntry.Text = _motorista.ValorHora.ToString();
-                }
-            }
-        }
+        public event EventHandler<MotoristaInfo> AoCompletar;
 
         public CadastroMotoristaPage()
         {
@@ -101,7 +60,6 @@ namespace Emagine.Frete.Pages
                     _VeiculoEntry,
                     _PlacaEntry,
                     _ANTTEntry,
-                    _ValorHoraEntry,
                     _CadastroButton
                 }
             };
@@ -111,11 +69,25 @@ namespace Emagine.Frete.Pages
                 Orientation = ScrollOrientation.Vertical,
                 VerticalOptions = LayoutOptions.Fill,
                 HorizontalOptions = LayoutOptions.Fill,
-                Content = _mainLayout
+                Content = new StackLayout
+                {
+                    Orientation = StackOrientation.Vertical,
+                    VerticalOptions = LayoutOptions.Fill,
+                    HorizontalOptions = LayoutOptions.Fill,
+                    Padding = 5,
+                    Children = {
+                        _TipoVeiculoEntry,
+                        _CarroceriaEntry,
+                        _CNHEntry,
+                        _PlacaEntry,
+                        _ANTTEntry,
+                        _CadastroButton
+                    }
+                }
             };
         }
 
-        protected virtual void inicializarComponente()
+        private void inicializarComponente()
         {
             _TipoVeiculoEntry = new DropDownList
             {
@@ -131,7 +103,6 @@ namespace Emagine.Frete.Pages
                 tipoVeiculoPage.AoSelecionar += (object s2, Model.TipoVeiculoInfo e2) =>
                 {
                     _TipoVeiculoEntry.Value = e2;
-                    tipoVeiculoPage.Navigation.PopAsync();
                 };
                 Navigation.PushAsync(tipoVeiculoPage);
             };
@@ -150,7 +121,6 @@ namespace Emagine.Frete.Pages
                 carroceriaPage.AoSelecionar += (object s2, Model.TipoCarroceriaInfo e2) =>
                 {
                     _CarroceriaEntry.Value = e2;
-                    carroceriaPage.Navigation.PopAsync();
                 };
                 Navigation.PushAsync(carroceriaPage);
             };
@@ -184,15 +154,7 @@ namespace Emagine.Frete.Pages
             _ANTTEntry = new XfxEntry
             {
                 Placeholder = "ANTT",
-                Keyboard = Keyboard.Numeric,
-                VerticalOptions = LayoutOptions.Start,
-                HorizontalOptions = LayoutOptions.Fill,
-                ErrorDisplay = ErrorDisplay.None
-            };
-            _ValorHoraEntry = new XfxEntry
-            {
-                Placeholder = "Valor da Hora",
-                Keyboard = Keyboard.Numeric,
+                Keyboard = Keyboard.Text,
                 VerticalOptions = LayoutOptions.Start,
                 HorizontalOptions = LayoutOptions.Fill,
                 Style = Estilo.Current[Estilo.ENTRY_MATERIAL],
@@ -211,7 +173,23 @@ namespace Emagine.Frete.Pages
 
         private async void CadastroClicked(object sender, EventArgs e)
         {
+            var usuario = Usuario;
+
             var regraUsuario = UsuarioFactory.create();
+            /*
+            var antt = usuario.Preferencias.Where(x => x.Chave == "ANTT").FirstOrDefault();
+            if (!String.IsNullOrEmpty(_ANTTEntry.Text)) {
+                if (antt != null) {
+                    antt.Valor = _ANTTEntry.Text;
+                }
+                else {
+                    usuario.Preferencias.Add(new UsuarioPreferenciaInfo {
+                        Chave = "ANTT",
+                        Valor = _ANTTEntry.Text
+                    });
+                }
+            }
+            */
 
             if (Gravar)
             {
@@ -288,7 +266,8 @@ namespace Emagine.Frete.Pages
                     {
                         await regraMotorista.alterar(motorista);
                     }
-                    else {
+                    else
+                    {
                         await regraMotorista.inserir(motorista);
                     }
                     */
@@ -302,7 +281,7 @@ namespace Emagine.Frete.Pages
                 }
                 else {
                     //UserDialogs.Instance.HideLoading();
-                    AoCompletar?.Invoke(this, Motorista);
+                    AoCompletar?.Invoke(this, motorista);
                 }
             }
             catch (Exception erro)

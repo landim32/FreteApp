@@ -1,14 +1,13 @@
 <?php
 namespace Emagine\Frete\DAL;
 
-use Emagine\Frete\DALFactory\TipoVeiculoDALFactory;
 use PDO;
 use Exception;
 use Landim32\EasyDB\DB;
 use Emagine\Frete\IDAL\IFreteTipoVeiculoDAL;
 use Emagine\Frete\Model\TipoVeiculoInfo;
 
-class FreteTipoVeiculoDAL implements IFreteTipoVeiculoDAL {
+class FreteTipoVeiculoDAL extends TipoVeiculoDAL implements IFreteTipoVeiculoDAL {
 
     /**
      * @throws Exception
@@ -16,8 +15,7 @@ class FreteTipoVeiculoDAL implements IFreteTipoVeiculoDAL {
      * @return TipoVeiculoInfo[]
      */
     public function listarPorFrete($id_frete) {
-        $dalVeiculo = TipoVeiculoDALFactory::create();
-        $query = $dalVeiculo->query() . "
+        $query = $this->query() . "
             INNER JOIN frete_veiculo_tipo ON frete_veiculo_tipo.id_tipo = veiculo_tipo.id_tipo
             WHERE frete_veiculo_tipo.id_frete = :id_frete
         ";

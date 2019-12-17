@@ -1,4 +1,0 @@
-host: 200.201.216.218
-banco de dados: gvpxhzei_app
-user: gvpxhzei_user
-senha: [;]!)X1+)HNT

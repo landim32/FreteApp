@@ -7,7 +7,6 @@ using Emagine.Base.Model;
 using Emagine.Base.Utils;
 using Foundation;
 using ImageButton.iOS;
-using SuaveControls.FloatingActionButton.iOS.Renderers;
 using UIKit;
 using Xfx;
 
@@ -19,8 +18,6 @@ namespace Frete.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
-
-            FloatingActionButtonRenderer.InitRenderer();
 
             XfxControls.Init();
             global::Xamarin.Forms.Forms.Init();

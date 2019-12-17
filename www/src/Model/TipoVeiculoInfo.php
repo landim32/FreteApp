@@ -91,18 +91,16 @@ class TipoVeiculoInfo implements JsonSerializable {
 
     /**
      * @throws Exception
-     * @param int $largura
-     * @param int $altura
      * @return string
      */
-    public function getFotoUrl($largura = 120, $altura = 120) {
+    public function getFotoUrl() {
+        if (!isNullOrEmpty($this->foto)) {
             if (!defined("SITE_URL")) {
                 throw new Exception("SITE_URL não foi definido.");
             }
-            if (isNullOrEmpty($this->getFoto())) {
-                return SITE_URL . sprintf("/img/%sx%s/anonimo.png", $largura, $altura);
-            }
-            return SITE_URL . sprintf("/veiculo/%sx%s/", $largura, $altura) . $this->getFoto();
+            return SITE_URL . "/images/veiculo/" . $this->foto;
+        }
+        return null;
     }
 
     /**

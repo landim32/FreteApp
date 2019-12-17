@@ -1,132 +1,68 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Frete.Pages;
+using EmagineFrete.Pages;
 using Xamarin.Forms;
 using System.Linq;
+using EmagineFrete.Model;
 using Acr.UserDialogs;
-using Emagine.Base.Estilo;
-using Emagine.Base.Model;
-using Emagine.Base.Pages;
-using System.Collections.Generic;
-using Emagine.Login.Factory;
-using Emagine.Login.Pages;
-using Emagine.Frete.BLL;
 using Emagine.Base.Utils;
+using Emagine.Base.Pages;
+using Emagine.Base.Model;
 using FormsPlugin.Iconize;
-using Emagine.Frete.Pages;
+using Emagine.Base.Estilo;
+using System.Collections.Generic;
+using EmagineFrete.Popups;
 using Emagine.Frete.Factory;
-using Emagine.Login.BLL;
+using Emagine.Login.Factory;
+using Emagine.Frete.Pages;
+using Emagine.Login.Pages;
 using Emagine.Frete.Utils;
 using Emagine.GPS.Utils;
-using Emagine.GPS.Model;
-using Emagine.Frete.Model;
-using Emagine.Pagamento.Model;
-using Emagine.Pagamento.Pages;
-using Emagine.Mapa.Pages;
-using Emagine.Login.Model;
-using Emagine.Login.Utils;
 
 namespace Emagine
 {
     public class App : Application
     {
-        
+
         public App()
         {
-            GlobalUtils.URLAplicacao = "http://emagine.com.br/frete";
+            GlobalUtils.URLAplicacao = "http://emagine.com.br/nvoid";
+            GlobalUtils.setAplicacaoAtual(AplicacaoEnum.APLICACAO02);
+            var estilo = criarEstilo();
 
             GPSUtils.UsaLocalizacao = true;
             GPSUtils.Current.DistanciaMinima = 0;
             GPSUtils.Current.TempoMinimo = 10;
 
-            //UsuarioFormPageFactory.Tipo = typeof(CustomUsuarioFormPage);
-            //UsuarioFormPageFactory.Tipo = typeof(FreteUsuarioFormPage);
-            //CadastroMotoristaPageFactory.Tipo = typeof(CustomCadastroMotoristaPage);
-
-            var estilo = criarEstilo();
-            //MainPage = new NavigationPage(new BlankPage());
-            inicializarApp();
-            //CaronaUtils.inicializarFrete();
-
-            /*
-            ((RootPage)MainPage).PaginaAtual = new RotaSelecionaPage {
-                Title = "Selecione a rota",
-                TituloPadrao = "teste",
-                IniciarEmPosicaoAtual = true
-            };
-            */
-
-            //CaronaUtils.inicializar();
-
-            /*
             var regraUsuario = UsuarioFactory.create();
             var usuario = regraUsuario.pegarAtual();
+
             if (usuario != null)
             {
-                inicializarApp();
+                MainPage = gerarRootPage(new PrincipalPage());
             }
-            else {
-                var inicialPage = new CustomInicialPage();
-                //inicialPage.Appearing += InicialPageAppearing;
-                MainPage = new IconNavigationPage(inicialPage) {
+            else
+            {
+                MainPage = new IconNavigationPage(new InicialPage())
+                {
                     BarBackgroundColor = Estilo.Current.BarBackgroundColor,
                     BarTextColor = Estilo.Current.BarTitleColor
                 };
             }
-            */
-        }
-
-        public void inicializarApp() {
-            var inicialPage = new BlankPage
-            {
-                Title = "Emagine Carona"
-            };
-            inicialPage.Appearing += InicialPageAppearing;
-            MainPage = gerarRootPage(inicialPage);
-        }
-
-        private async void InicialPageAppearing(object sender, EventArgs e)
-        {
-            PermissaoUtils.pedirPermissao();
-            if (await GPSUtils.Current.inicializar())
-            {
-                var regraMotorista = MotoristaFactory.create();
-                var motorista = regraMotorista.pegarAtual();
-                if (motorista != null)
-                {
-                    GPSUtils.Current.aoAtualizarPosicao += atualizarPosicao;
-                }
-            }
-            else {
-                await UserDialogs.Instance.AlertAsync("Ative seu GPS!", "Erro", "Entendi");
-            }
-            //CaronaUtils.inicializar();
-            CaronaUtils.inicializarFrete();
-        }
-
-        private void atualizarPosicao(object sender, GPSLocalInfo local)
-        {
-            Device.BeginInvokeOnMainThread(() => {
-                CaronaUtils.atualizarPosicao(local);
-            });
         }
 
         public static Page gerarRootPage(Page mainPage)
         {
-            var regraUsuario = UsuarioFactory.create();
-            var usuario = regraUsuario.pegarAtual();
+            mainPage.Appearing += MotoristaUtils.inicializar;
             var rootPage = new RootPage
             {
-                NomeApp = "Emagine Carona",
+                NomeApp = "NVoid",
                 PaginaAtual = mainPage,
-                Usuario = usuario,
-                Menus = gerarMenu(usuario)
+                Menus = gerarMenu()
             };
             rootPage.AoAtualizarMenu += (sender, e) =>
             {
-                var usuarioAtual = regraUsuario.pegarAtual();
-                ((RootPage)sender).Usuario = usuarioAtual;
-                ((RootPage)sender).Menus = gerarMenu(usuarioAtual);
+                ((RootPage)sender).Menus = gerarMenu();
             };
             return rootPage;
         }
@@ -134,47 +70,24 @@ namespace Emagine
         private Estilo criarEstilo()
         {
             var estilo = Estilo.Current;
-            /*
-            estilo.PrimaryColor = Color.FromHex("#ffc500");
-            estilo.SuccessColor = Color.FromHex("#00c851");
+            estilo.PrimaryColor = Color.FromHex("#10142f");
+            estilo.SuccessColor = Color.FromHex("#a2c760");
             estilo.InfoColor = estilo.PrimaryColor;
-            estilo.WarningColor = Color.FromHex("#f80");
+            estilo.WarningColor = Color.FromHex("#e2944a");
             estilo.DangerColor = Color.FromHex("#d9534f");
-            estilo.DefaultColor = Color.FromHex("#33b5e5");
+            estilo.DefaultColor = Color.FromHex("#78909c"); //#535b63
             estilo.BarTitleColor = Color.White;
-            estilo.BarBackgroundColor = Color.FromHex("#2d2d30");
-            */
-            estilo.PrimaryColor = Color.FromHex("#1da9df");
-            estilo.SuccessColor = Color.FromHex("#5cb85c");
-            estilo.InfoColor = Color.FromHex("#5bc0de");
-            estilo.WarningColor = Color.FromHex("#f0ad4e");
-            estilo.DangerColor = Color.FromHex("#d9534f");
-            estilo.DefaultColor = Color.Gray;
-            estilo.BarTitleColor = Color.FromHex("#ffffff");
-            estilo.BarBackgroundColor = Color.FromHex("#197da6");
+            estilo.BarBackgroundColor = estilo.PrimaryColor;
 
-            estilo.FontDefaultRegular = Device.OnPlatform<string>(
-                "Raleway-Regular.ttf",
-                "Raleway-Regular.ttf#Raleway-Regular",
-                "Raleway-Regular.ttf"
-            );
-            estilo.FontDefaultBold = Device.OnPlatform<string>(
-                "Raleway-Bold.ttf",
-                "Raleway-Bold.ttf#Raleway-Bold",
-                "Raleway-Bold.ttf"
-            );
-            estilo.FontDefaultItalic = Device.OnPlatform<string>(
-                "Raleway-Italic.ttf",
-                "Raleway-Italic.ttf#Raleway-Italic",
-                "Raleway-Italic.ttf"
-            );
             estilo.TelaPadrao = new EstiloPage
             {
-                BackgroundColor = Color.FromHex("#d9d9d9")
+                //BackgroundColor = Color.FromHex("#d9d9d9")
+                //BackgroundImage = "fundo.jpg"
             };
             estilo.TelaEmBranco = new EstiloPage
             {
-                BackgroundColor = Color.White
+                //BackgroundColor = Color.White
+                //BackgroundImage = "fundo.jpg"
             };
             estilo.BgPadrao.BackgroundColor = Color.FromHex("#ffffff");
             estilo.BgRoot = new EstiloStackLayout
@@ -198,7 +111,6 @@ namespace Emagine
             estilo.MenuTexto = new EstiloLabel
             {
                 FontFamily = estilo.FontDefaultRegular,
-                //TextColor = Color.FromHex("#ffc500"),
                 TextColor = Color.White,
                 FontSize = 18
             };
@@ -283,20 +195,10 @@ namespace Emagine
                 FontSize = 16,
                 FontAttributes = FontAttributes.Bold
             };
-            estilo.ListaFramePadrao = new EstiloFrame
-            {
-                Margin = new Thickness(4, 0, 4, 6),
-                Padding = new Thickness(6, 4),
-                CornerRadius = 10,
-                VerticalOptions = LayoutOptions.Start,
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                BackgroundColor = Color.White
-            };
             estilo.ListaItem = new EstiloLabel
             {
                 FontFamily = estilo.FontDefaultBold,
-                //FontSize = 24,
-                FontSize = 18,
+                FontSize = 24,
                 FontAttributes = FontAttributes.Bold
             };
             estilo.ListaBadgeTexto = new EstiloLabel
@@ -317,6 +219,28 @@ namespace Emagine
             estilo.IconePadrao = new EstiloIcon
             {
                 IconSize = 20
+            };
+            estilo.TotalFrame = new EstiloFrame
+            {
+                Margin = new Thickness(4, 0, 4, 5),
+                Padding = new Thickness(3, 2),
+                CornerRadius = 10,
+                VerticalOptions = LayoutOptions.Start,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                BackgroundColor = estilo.BarBackgroundColor
+            };
+            estilo.TotalLabel = new EstiloLabel
+            {
+                FontFamily = estilo.FontDefaultRegular,
+                FontSize = 11,
+                TextColor = estilo.BarTitleColor
+            };
+            estilo.TotalTexto = new EstiloLabel
+            {
+                FontFamily = estilo.FontDefaultBold,
+                FontAttributes = FontAttributes.Bold,
+                FontSize = 20,
+                TextColor = estilo.BarTitleColor
             };
             estilo.EnderecoItem = new EstiloLabel
             {
@@ -350,267 +274,39 @@ namespace Emagine
                 FontFamily = estilo.FontDefaultRegular,
                 FontSize = 12
             };
-
-            estilo.Total.Frame = new EstiloFrame
-            {
-                Margin = new Thickness(4, 0, 4, 5),
-                //Padding = new Thickness(3, 2),
-                Padding = new Thickness(3, 10),
-                //CornerRadius = 10,
-                CornerRadius = 5,
-                //BorderWidth = 1,
-                //BorderColor = Color.FromHex("#7a7a7a"),
-                VerticalOptions = LayoutOptions.Start,
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                //BackgroundColor = estilo.BarBackgroundColor
-                BackgroundColor = Color.FromHex("#bced8c"),
-            };
-            estilo.Total.Label = new EstiloLabel
-            {
-                FontFamily = estilo.FontDefaultRegular,
-                FontSize = 12,
-                //TextColor = estilo.BarTitleColor
-                //TextColor = estilo.BarTitleColor,
-                TextColor = Color.Black,
-            };
-            estilo.Total.Texto = new EstiloLabel
-            {
-                FontFamily = estilo.FontDefaultBold,
-                FontAttributes = FontAttributes.Bold,
-                FontSize = 14,
-                //TextColor = estilo.BarTitleColor
-                TextColor = Color.Black,
-            };
-
-            estilo.Produto.Frame = new EstiloFrame
-            {
-                CornerRadius = 7,
-                Padding = 2,
-                //Margin = new Thickness(2, 2),
-                //BackgroundColor = Color.FromHex("#feecd6")
-                BackgroundColor = Color.White
-            };
-            estilo.Produto.Foto = new EstiloImage
-            {
-                WidthRequest = 80,
-                HeightRequest = 110,
-                Aspect = Aspect.AspectFit
-            };
-            estilo.Produto.Titulo = new EstiloLabel
-            {
-                FontFamily = Estilo.Current.FontDefaultBold,
-                //FontSize = 20,
-                FontSize = 12,
-                FontAttributes = FontAttributes.Bold,
-                //LineBreakMode = LineBreakMode.TailTruncation,
-                //TextColor = Estilo.Current.PrimaryColor
-                TextColor = estilo.BarBackgroundColor
-            };
-            estilo.Produto.Descricao = new EstiloLabel
-            {
-                FontAttributes = FontAttributes.Bold,
-                TextColor = Color.FromHex("#777777")
-            };
-            estilo.Produto.Volume = new EstiloLabel
-            {
-                FontAttributes = FontAttributes.Bold,
-                TextColor = Color.FromHex("#777777")
-            };
-            estilo.Produto.Label = new EstiloLabel
-            {
-                FontAttributes = FontAttributes.None,
-                FontSize = 9
-            };
-            estilo.Produto.Quantidade = new EstiloLabel
-            {
-                FontAttributes = FontAttributes.Bold,
-                TextColor = Color.FromHex("#ff0000"),
-                FontSize = 10
-            };
-            estilo.Produto.PrecoMoeda = new EstiloLabel
-            {
-                //FontSize = 11
-                FontSize = 7
-            };
-            estilo.Produto.PrecoValor = new EstiloLabel
-            {
-                FontFamily = Estilo.Current.FontDefaultBold,
-                FontAttributes = FontAttributes.Bold,
-                FontSize = 12
-                //FontSize = 24
-            };
-            estilo.Produto.PromocaoMoeda = new EstiloLabel
-            {
-                //FontSize = 11
-                FontSize = 7,
-                //TextColor = Color.FromHex("#ff0000"),
-            };
-            estilo.Produto.PromocaoValor = new EstiloLabel
-            {
-                FontFamily = Estilo.Current.FontDefaultBold,
-                FontAttributes = FontAttributes.Bold,
-                FontSize = 12,
-                //TextColor = Color.FromHex("#ff0000"),
-                //FontSize = 24
-            };
-            estilo.Produto.Icone = new EstiloIcon
-            {
-                IconColor = Color.FromHex("#ffc500"),
-                IconSize = 22
-                //IconSize = 24
-            };
-            estilo.Produto.Carrinho = new EstiloBotao
-            {
-                FontAttributes = FontAttributes.Bold,
-                FontSize = 14,
-                BackgroundColor = Color.FromHex("#bced8c"),
-                TextColor = Color.Black,
-                CornerRadius = 5,
-                BorderWidth = 1,
-                BorderColor = Color.FromHex("#7a7a7a")
-            };
-            estilo.Quantidade.AdicionarBotao = new EstiloFrame
-            {
-                BackgroundColor = Estilo.Current.BotaoInfo.BackgroundColor,
-            };
-            estilo.Quantidade.AdicionarIcone = new EstiloIcon
-            {
-                IconColor = Color.Black,
-                IconSize = 20,
-            };
-            estilo.Quantidade.RemoverBotao = new EstiloFrame
-            {
-                BackgroundColor = Estilo.Current.BotaoInfo.BackgroundColor,
-            };
-            estilo.Quantidade.RemoverIcone = new EstiloIcon
-            {
-                IconColor = Color.Black,
-                IconSize = 20,
-            };
-            estilo.Quantidade.Fundo = new EstiloFrame
-            {
-                Padding = 5,
-                BackgroundColor = Color.Silver,
-            };
-            estilo.Quantidade.QuantidadeTexto = new EstiloLabel
-            {
-                FontSize = 16,
-                FontAttributes = FontAttributes.Bold
-            };
-
             App.Current.Resources = estilo.gerar();
             return estilo;
         }
 
-        public static IList<MenuItemInfo> gerarMenu(UsuarioInfo usuario)
+        public static IList<MenuItemInfo> gerarMenu()
         {
             var regraUsuario = UsuarioFactory.create();
+            var usuario = regraUsuario.pegarAtual();
+
             var regraMotorista = MotoristaFactory.create();
             var motorista = regraMotorista.pegarAtual();
 
             var menus = new List<MenuItemInfo>();
 
-            /*
-            menus.Add(new MenuItemInfo
-            {
-                IconeFA = "fa-home",
-                Titulo = "Início",
-                aoClicar = (sender, e) =>
-                {
-                    CaronaUtils.inicializarFrete();
-                }
-            });
-            */
-
-            menus.Add(new MenuItemInfo
-            {
-                IconeFA = "fa-car",
-                Titulo = "Pedir Carona",
-                aoClicar = (sender, e) =>
-                {
-                    CaronaUtils.inicializarFrete();
-                }
-            });
-
-
             if (motorista != null)
             {
                 menus.Add(new MenuItemInfo
                 {
-                    IconeFA = "fa-truck",
-                    Titulo = "Meus atendimentos",
+                    IconeFA = "fa-car",
+                    Titulo = "Corridas em espera",
                     aoClicar = (sender, e) =>
                     {
-                        CaronaUtils.listarMeuFreteComoMotorista();
+                        ((RootPage)App.Current.MainPage).PushAsync(new CorridasEmEspera());
+                        //((RootPage)App.Current.MainPage).PushAsync(new FreteMotoristaListaPage());
                     }
                 });
-
                 menus.Add(new MenuItemInfo
                 {
                     IconeFA = "fa-search",
-                    Titulo = "Buscar corridas",
+                    Titulo = "Minhas Entregas",
                     aoClicar = (sender, e) =>
                     {
-                        CaronaUtils.buscarFreteComoMotorista();
-                    }
-                });
-
-                menus.Add(new MenuItemInfo
-                {
-                    IconeFA = "fa-user",
-                    Titulo = "Meu cadastro",
-                    aoClicar = (sender, e) =>
-                    {
-                        var usuarioPage = new CustomUsuarioGerenciaPage
-                        {
-                            EnderecoVisivel = false
-                        };
-                        ((RootPage)Current.MainPage).PaginaAtual = usuarioPage;
-                    }
-                });
-            }
-            else if (usuario != null) {
-                menus.Add(new MenuItemInfo
-                {
-                    IconeFA = "fa-user",
-                    Titulo = "Meus dados",
-                    aoClicar = (sender, e) =>
-                    {
-                        var usuarioAtual = regraUsuario.pegarAtual();
-
-                        var usuarioPage = UsuarioFormPageFactory.create();
-                        usuarioPage.Title = "Meus Dados";
-                        usuarioPage.Usuario = usuarioAtual;
-                        ((RootPage)Current.MainPage).PaginaAtual = usuarioPage;
-                    }
-                });
-                menus.Add(new MenuItemInfo
-                {
-                    IconeFA = "fa-truck",
-                    Titulo = "Minhas corridas",
-                    aoClicar = (sender, e) =>
-                    {
-                        CaronaUtils.listarMeuFreteComoCliente();
-                    }
-                });
-                menus.Add(new MenuItemInfo
-                {
-                    IconeFA = "fa-car",
-                    Titulo = "Seja um motorista!",
-                    aoClicar = (sender, e) =>
-                    {
-                        //var regraUsuario = UsuarioFactory.create();
-                        //var regraMotorista = MotoristaFactory.create();
-
-                        var usuario2 = regraUsuario.pegarAtual();
-                        var motorista2 = regraMotorista.pegarAtual();
-                        var cadastroMotoristaPage = CadastroMotoristaPageFactory.create();
-                        cadastroMotoristaPage.Usuario = usuario2;
-                        cadastroMotoristaPage.Motorista = motorista2;
-                        cadastroMotoristaPage.AoCompletar += (s2, e2) => {
-                            UserDialogs.Instance.AlertAsync("Seu cadastro foi enviado. Estamos analizando e retornaremos!");
-                        };
-                        ((RootPage)Current.MainPage).PushAsync(cadastroMotoristaPage);
+                        ((RootPage)App.Current.MainPage).PushAsync(new FreteListaPage(false));
                     }
                 });
             }
@@ -618,80 +314,117 @@ namespace Emagine
             {
                 menus.Add(new MenuItemInfo
                 {
-                    IconeFA = "fa-user",
-                    Titulo = "Entrar",
+                    IconeFA = "fa-car",
+                    Titulo = "Enviar Produto",
                     aoClicar = (sender, e) =>
                     {
-                        var loginPage = new LoginPage {
-                            Title = "Login"
-                        };
-                        loginPage.AoLogar += (s, u) => {
-                            CaronaUtils.inicializarFrete();
-                        };
-                        ((RootPage)Current.MainPage).PushAsync(loginPage);
+                        ((RootPage)App.Current.MainPage).PushAsync(new ProdutoPage());
                     }
                 });
+
                 menus.Add(new MenuItemInfo
                 {
-                    IconeFA = "fa-user-plus",
-                    Titulo = "Criar Conta",
+                    IconeFA = "fa-search",
+                    Titulo = "Rastrear Mercadoria",
                     aoClicar = (sender, e) =>
                     {
-                        /*
-                        ((RootPage)Current.MainPage).PushAsync(Login.Utils.LoginUtils.gerarCadastro((u) => {
-                            CaronaUtils.inicializarFrete();
-                        }));
-                        */
-                        var cadastroPage = LoginUtils.gerarCadastro((usuario2) => {
-                            CaronaUtils.inicializarFrete();
-                        });
-                        ((RootPage)Current.MainPage).PushAsync(cadastroPage);
-                        /*
-                        CaronaUtils.criarUsuario(() => {
-                            CaronaUtils.inicializarFrete();
-                        });
-                        */
+                        var listaFretePage = new FreteListaPage(false) {
+                            Title = "Ratrear Mercadoria"
+                        };
+                        ((RootPage)App.Current.MainPage).PushAsync(listaFretePage);
                     }
                 });
+
+                menus.Add(new MenuItemInfo
+                {
+                    IconeFA = "fa-gift",
+                    Titulo = "Meus Pedidos",
+                    aoClicar = (sender, e) =>
+                    {
+                        var listaFretePage = new FreteListaPage(true)
+                        {
+                            Title = "Meus Pedidos"
+                        };
+                        ((RootPage)App.Current.MainPage).PushAsync(listaFretePage);
+                    }
+                });
+
+                /*
+                menus.Add(new MenuItemInfo
+                {
+                    IconeFA = "fa-cogs",
+                    Titulo = "Minhas Configurações",
+                    aoClicar = (sender, e) =>
+                    {
+                        //((RootPage)MainPage).PushAsync(new ConfiguracaoPage());
+                    }
+                });
+                */
+
+                menus.Add(new MenuItemInfo
+                {
+                    IconeFA = "fa-user",
+                    Titulo = "Cadastro",
+                    aoClicar = (sender, e) =>
+                    {
+                        //((RootPage)App.Current.MainPage).PushAsync(new CadastroTipoPopup(false));
+                        var usuarioGerenciaPage = new UsuarioGerenciaPage {
+                            EnderecoVisivel = false
+                        };
+                        ((RootPage)App.Current.MainPage).PushAsync(usuarioGerenciaPage);
+                    }
+                });
+
             }
 
             menus.Add(new MenuItemInfo
             {
-                IconeFA = "fa-question",
-                Titulo = "Sobre a Emagine",
-                aoClicar = (sender, e) =>
-                {
-                    var sobrePage = new DocumentoPage {
-                        NomeArquivo = "sobre.html"
-                    };
-                    ((RootPage)Current.MainPage).PushAsync(sobrePage);
-                }
-            });
-
-            menus.Add(new MenuItemInfo
-            {
-                IconeFA = "fa-comment",
+                IconeFA = "fa-envelope",
                 Titulo = "Fale Conosco",
                 aoClicar = (sender, e) =>
                 {
-                    Device.OpenUri(new Uri("mailto:rodrigo@emagine.com.br"));
+                    Device.OpenUri(new Uri("mailto:exclusive@nvoid.com.br"));
                 }
             });
 
-            if (usuario != null) {
-                menus.Add(new MenuItemInfo {
-                    IconeFA = "fa-remove",
-                    Titulo = "Sair",
-                    aoClicar = async (sender, e) => {
-                        var regraFrete = FreteFactory.create();
-                        await regraFrete.limparAtual();
-                        await regraUsuario.limparAtual();
-                        await regraMotorista.limparAtual();
-                        ((RootPage)App.Current.MainPage).atualizarMenu();
-                        CaronaUtils.inicializarFrete();
-                    }
-                });
-            }
+            menus.Add(new MenuItemInfo
+            {
+                IconeFA = "fa-exclamation-circle",
+                Titulo = "Sobre o Aplicativo",
+                aoClicar = (sender, e) =>
+                {
+                    ((RootPage)App.Current.MainPage).PaginaAtual = new SobrePage();
+                }
+            });
+            menus.Add(new MenuItemInfo
+            {
+                IconeFA = "fa-file-text",
+                Titulo = "Termos e Condições",
+                aoClicar = (sender, e) =>
+                {
+                    var motoristaLocal = MotoristaFactory.create().pegarAtual();
+                    if (motoristaLocal == null)
+                        ((RootPage)App.Current.MainPage).PushAsync(new PoliticaDePrivacidade(false));
+                    else
+                        ((RootPage)App.Current.MainPage).PushAsync(new PoliticaDePrivacidade(true));
+                }
+            });
+
+            menus.Add(new MenuItemInfo
+            {
+                IconeFA = "fa-arrow-left",
+                Titulo = "Sair",
+                aoClicar = async (sender, e) => {
+                    await UsuarioFactory.create().limparAtual();
+                    await MotoristaFactory.create().limparAtual();
+                    await FreteFactory.create().limparAtual();
+                    App.Current.MainPage = new IconNavigationPage(new InicialPage())
+                    {
+                        BarBackgroundColor = Estilo.Current.BarBackgroundColor,
+                        BarTextColor = Estilo.Current.BarTitleColor
+                    };
+                }
+            });
 
             return menus;
         }
@@ -699,19 +432,14 @@ namespace Emagine
         protected override void OnStart()
         {
             // Handle when your app starts
-            /*
-            var regraMotorista = MotoristaFactory.create();
-            var motorista = regraMotorista.pegarAtual();
-            if(motorista != null){
-                AtualizacaoFrete.start();   
-            }
-            */
+
+            //AtualizacaoEntrega.start();
         }
 
 
         protected override void OnSleep()
         {
-            
+
             // Handle when your app sleeps
         }
 

@@ -1,13 +1,11 @@
 ﻿using Acr.UserDialogs;
-using Emagine.Banner.Utils;
 using Emagine.Base.Estilo;
 using Emagine.Pagamento.Model;
 using Emagine.Pagamento.Pages;
-using Emagine.Produto.Cells;
-using Emagine.Produto.Controls;
 using Emagine.Produto.Factory;
 using Emagine.Produto.Model;
-using Emagine.Produto.Utils;
+using Emagine.Veiculo.Cells;
+using Emagine.Veiculo.Pages;
 using FormsPlugin.Iconize;
 using System;
 using System.Collections.Generic;
@@ -20,35 +18,11 @@ namespace Emagine.Produto.Pages
 {
     public class CarrinhoPage : ContentPage
     {
-        private StackLayout _valorMinimoLayout;
-        private StackLayout _rodapeLayout;
         private ListView _ProdutoListView;
-        private TotalCarrinhoView _totalView;
-        protected Type _itemTemplate = null;
-        protected Label _empresaLabel;
-        protected Label _valorMinimoLabel;
-        private Button _continuarCompraButton;
-        private Button _finalizarCompraButton;
+        private Label _TotalLabel;
+        private Button _FinalizarCompraButton;
 
         public event EventHandler<IList<ProdutoInfo>> AoFinalizar;
-
-        public Type ItemTemplate {
-            get {
-                if (_itemTemplate != null) {
-                    return _itemTemplate;
-                }
-                else if (ProdutoUtils.CarrinhoItemTemplate != null) {
-                    return ProdutoUtils.CarrinhoItemTemplate;
-                }
-                else {
-                    return typeof(ProdutoCell);
-                }
-            }
-            set {
-                _itemTemplate = value;
-                _ProdutoListView.ItemTemplate = new DataTemplate(_itemTemplate);
-            }
-        }
 
         public CarrinhoPage()
         {
@@ -81,62 +55,34 @@ namespace Emagine.Produto.Pages
             });
 
             Style = Estilo.Current[Estilo.TELA_PADRAO];
+            //BackgroundColor = Color.FromHex("#d9d9d9");
             inicializarComponente();
-            _valorMinimoLayout = new StackLayout
-            {
-                Orientation = StackOrientation.Horizontal,
-                VerticalOptions = LayoutOptions.Start,
-                HorizontalOptions = LayoutOptions.CenterAndExpand,
-                Margin = new Thickness(5, 0),
-                Spacing = 0,
-                Children = {
-                    new Label {
-                        VerticalOptions = LayoutOptions.Start,
-                        HorizontalOptions = LayoutOptions.Start,
-                        HorizontalTextAlignment = TextAlignment.Center,
-                        Text = "Valor Mínimo:",
-                        FontSize = 10
-                    },
-                    _valorMinimoLabel
-                }
-            };
-            _rodapeLayout = new StackLayout
-            {
-                Orientation = StackOrientation.Vertical,
-                VerticalOptions = LayoutOptions.Start,
-                HorizontalOptions = LayoutOptions.Fill,
-                Margin = new Thickness(5, 0),
-                Spacing = 0,
-                Children = {
-                    _valorMinimoLayout,
-                    new Label {
-                        VerticalOptions = LayoutOptions.Start,
-                        HorizontalOptions = LayoutOptions.Fill,
-                        HorizontalTextAlignment = TextAlignment.Center,
-                        Text = "Você está comprando em:",
-                        FontSize = 10
-                    },
-                    _empresaLabel
-                }
-            };
             Content = new StackLayout
             {
+                //Margin = new Thickness(3, 3),
                 VerticalOptions = LayoutOptions.Fill,
                 HorizontalOptions = LayoutOptions.Fill,
                 Children = {
-                    _continuarCompraButton,
                     _ProdutoListView,
-                    new StackLayout {
-                        Orientation = StackOrientation.Horizontal,
-                        VerticalOptions = LayoutOptions.Start,
-                        HorizontalOptions = LayoutOptions.Fill,
-                        Margin = new Thickness(5, 0),
-                        Children = {
-                            _totalView,
-                            _finalizarCompraButton
+                    new Frame {
+                        Style = Estilo.Current[Estilo.TOTAL_FRAME],
+                        Content = new StackLayout {
+                            Orientation = StackOrientation.Horizontal,
+                            VerticalOptions = LayoutOptions.Start,
+                            HorizontalOptions = LayoutOptions.CenterAndExpand,
+                            Spacing = 2,
+                            Children = {
+                                new Label {
+                                    VerticalOptions = LayoutOptions.Center,
+                                    HorizontalOptions = LayoutOptions.Start,
+                                    Style = Estilo.Current[Estilo.TOTAL_LABEL],
+                                    Text = "Total: "
+                                },
+                                _TotalLabel
+                            }
                         }
                     },
-                    _rodapeLayout
+                    _FinalizarCompraButton
                 }
             };
         }
@@ -144,32 +90,22 @@ namespace Emagine.Produto.Pages
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
-            var regraLoja = LojaFactory.create();
-            var loja = regraLoja.pegarAtual();
-            if (loja != null) {
-                _empresaLabel.Text = loja.Nome;
-                if (loja.ValorMinimo > 0)
-                {
-                    _valorMinimoLabel.Text = loja.ValorMinimo.ToString("N2");
-                }
-                else {
-                    _rodapeLayout.Children.Remove(_valorMinimoLayout);
-                }
-            }
-
             var regraCarrinho = CarrinhoFactory.create();
-            if (regraCarrinho.Loja != null) {
-                _empresaLabel.Text = regraCarrinho.Loja.Nome;
-            }
+            regraCarrinho.AoAtualizar += CarrinhoAoAtualizar;
+            _TotalLabel.Text = "R$ " + regraCarrinho.getTotal().ToString("N2");
             _ProdutoListView.ItemsSource = regraCarrinho.listar();
-            _totalView.vincularComCarrinho();
         }
 
         protected override void OnDisappearing()
         {
-            _totalView.desvincularComCarrinho();
+            var regraCarrinho = CarrinhoFactory.create();
+            regraCarrinho.AoAtualizar -= CarrinhoAoAtualizar;
             base.OnDisappearing();
+        }
+
+        private void CarrinhoAoAtualizar(object sender, double e)
+        {
+            _TotalLabel.Text = "R$ " + e.ToString("N2");
         }
 
         private void inicializarComponente() {
@@ -179,99 +115,42 @@ namespace Emagine.Produto.Pages
                 HasUnevenRows = true,
                 RowHeight = -1,
                 SeparatorVisibility = SeparatorVisibility.None,
-                ItemTemplate = new DataTemplate(ItemTemplate)
+                ItemTemplate = new DataTemplate(typeof(ProdutoCell))
             };
             _ProdutoListView.SetBinding(ListView.ItemsSourceProperty, new Binding("."));
-
-            _totalView = new TotalCarrinhoView {
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                VerticalOptions = LayoutOptions.Start,
-                ExibeQuantidade = true,
-                ExibeTotal = true,
-                QuantidadeTitulo = "Qtde:"
+            /*
+            _ProdutoListView.ItemTapped += (sender, e) => {
+                if (e == null)
+                    return;
+                var veiculo = (ProdutoInfo)((ListView)sender).SelectedItem;
+                _ProdutoListView.SelectedItem = null;
             };
+            */
 
-            _empresaLabel = new Label
-            {
-                HorizontalOptions = LayoutOptions.Fill,
-                VerticalOptions = LayoutOptions.Start,
-                HorizontalTextAlignment = TextAlignment.Center,
-                FontAttributes = FontAttributes.Bold,
-                Margin = new Thickness(0, 0, 0, 3),
-                Text = "Smart Tecnologia ®"
-            };
-
-            _valorMinimoLabel = new Label
-            {
+            _TotalLabel = new Label {
                 HorizontalOptions = LayoutOptions.Start,
                 VerticalOptions = LayoutOptions.Start,
-                FontSize = 10,
-                FontAttributes = FontAttributes.Bold,
-                Margin = new Thickness(0, 0, 0, 3),
-                Text = "0,00"
+                Style = Estilo.Current[Estilo.TOTAL_TEXTO],
+                Text = "R$ 0,00",
             };
 
-            _continuarCompraButton = new Button {
-                Style = Estilo.Current[EstiloProduto.PRODUTO_CARRINHO_BOTAO],
+            _FinalizarCompraButton = new Button {
                 HorizontalOptions = LayoutOptions.FillAndExpand,
-                VerticalOptions = LayoutOptions.Start,
-                Text = "Continuar Compras",
-                FontSize = 11,
-                HeightRequest = 40,
-                Margin = new Thickness(4, 3, 4, 0)
-            };
-            _continuarCompraButton.Clicked += (sender, e) => {
-                var categoriaPage = CategoriaPageFactory.create();
-                categoriaPage.BannerVisivel = BannerUtils.Ativo;
-                categoriaPage.Title = "Categorias";
-                Navigation.PushAsync(categoriaPage);
-            };
-
-            _finalizarCompraButton = new Button {
-                //HorizontalOptions = LayoutOptions.FillAndExpand,
-                //VerticalOptions = LayoutOptions.End,
-                HorizontalOptions = LayoutOptions.Start,
-                VerticalOptions = LayoutOptions.Start,
+                VerticalOptions = LayoutOptions.End,
                 Text = "Finalizar Compra",
-                FontSize = 11,
-                HeightRequest = 40,
-                //Margin = new Thickness(4, 0, 4, 3),
-                //Style = Estilo.Current[Estilo.BTN_SUCESSO]
-                Style = Estilo.Current[EstiloProduto.PRODUTO_CARRINHO_BOTAO]
+                Margin = new Thickness(4, 0, 4, 3),
+                Style = Estilo.Current[Estilo.BTN_SUCESSO]
             };
-            _finalizarCompraButton.Clicked += FinalizarCompraButtonClicked;
+            _FinalizarCompraButton.Clicked += FinalizarCompraButtonClicked;
         }
 
-        public void excluir(ProdutoInfo produto)
-        {
-            var regraCarrinho = CarrinhoFactory.create();
-            regraCarrinho.excluir(produto);
-            var produtos = regraCarrinho.listar();
-            if (produtos != null && produtos.Count == 0)
-            {
-                var regraLoja = LojaFactory.create();
-                var loja = regraLoja.pegarAtual();
-                _empresaLabel.Text = loja.Nome;
-            }
-            _ProdutoListView.ItemsSource = produtos;
-        }
-
-        private async void FinalizarCompraButtonClicked(object sender, EventArgs e)
+        private void FinalizarCompraButtonClicked(object sender, EventArgs e)
         {
             if (AoFinalizar != null)
             {
-                var regraLoja = LojaFactory.create();
                 var regraCarrinho = CarrinhoFactory.create();
-                var loja = regraLoja.pegarAtual();
-                if (loja.ValorMinimo > 0 && regraCarrinho.getTotal() < loja.ValorMinimo)
-                {
-                    var mensagem = string.Format("Sua compra precisa ter o valor mínimo de R$ {0}", loja.ValorMinimo.ToString("N2"));
-                    await UserDialogs.Instance.AlertAsync(mensagem, "Aviso", "Entendi");
-                }
-                else {
-                    var produtos = regraCarrinho.listar();
-                    AoFinalizar(this, produtos);
-                }
+                var produtos = regraCarrinho.listar();
+                AoFinalizar(this, produtos);
             }
         }
     }

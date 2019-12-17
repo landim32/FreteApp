@@ -75,7 +75,7 @@ namespace Emagine.Pedido.Utils
                                 Tempo = retorno.Tempo,
                                 TempoStr = retorno.TempoStr
                             };
-                            rota.Polyline = MapaUtils.decodePolyline(rota.PolylineStr);
+                            rota.Polyline = MapaUtils.DecodePolyline(rota.PolylineStr);
                             if (AcompanhaPageAtual != null)
                             {
                                 AcompanhaPageAtual.atualizarMapa(rota);

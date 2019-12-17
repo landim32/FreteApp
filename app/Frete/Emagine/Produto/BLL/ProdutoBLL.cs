@@ -23,7 +23,6 @@ namespace Emagine.Produto.BLL
             }
         }
 
-        [Obsolete]
         public async Task<IList<ProdutoInfo>> buscar(int idLoja, string palavraChave)
         {
             string url = GlobalUtils.URLAplicacao + "/api/produto/buscar/" + idLoja.ToString();
@@ -36,16 +35,6 @@ namespace Emagine.Produto.BLL
             return produtos;
         }
 
-        public async Task<ProdutoRetornoInfo> buscar(ProdutoFiltroInfo filtro)
-        {
-            string url = GlobalUtils.URLAplicacao + "/api/produto/buscar";
-            var args = new List<object>() { filtro };
-            var produtos = await queryPut<ProdutoRetornoInfo>(url, args.ToArray());
-            atualizarDoCarrinho(produtos.Produtos);
-            return produtos;
-        }
-
-        [Obsolete]
         public async Task<IList<ProdutoInfo>> listar(int idLoja, int idCategoria = 0) {
             string url = GlobalUtils.URLAplicacao + "/api/produto/listar/" + idLoja.ToString();
             if (idCategoria > 0) {
@@ -56,7 +45,6 @@ namespace Emagine.Produto.BLL
             return produtos;
         }
 
-        [Obsolete]
         public async Task<IList<ProdutoInfo>> listarPorFiltro(ProdutoFiltroInfo filtro)
         {
             string url = GlobalUtils.URLAplicacao + "/api/produto/listar-por-filtro";
@@ -66,42 +54,11 @@ namespace Emagine.Produto.BLL
             return produtos;
         }
 
-        [Obsolete]
         public async Task<IList<ProdutoInfo>> listarDestaque(int idLoja)
         {
             var produtos = await queryGet<IList<ProdutoInfo>>(GlobalUtils.URLAplicacao + "/api/produto/listar-destaque/" + idLoja.ToString());
             atualizarDoCarrinho(produtos);
             return produtos;
-        }
-
-        public async Task<ProdutoInfo> pegar(int idProduto)
-        {
-            string url = string.Format("{0}/api/produto/pegar/{1}", GlobalUtils.URLAplicacao, idProduto);
-            var produto = await queryGet<ProdutoInfo>(url);
-            //atualizarDoCarrinho(produtos);
-            return produto;
-        }
-
-        public async Task<ProdutoInfo> pegarPorCodigo(int idLoja, string codigo)
-        {
-            string url = string.Format("{0}/api/produto/{1}/pegar-por-codigo/{2}", GlobalUtils.URLAplicacao, idLoja, codigo);
-            var produto = await queryGet<ProdutoInfo>(url);
-            //atualizarDoCarrinho(produtos);
-            return produto;
-        }
-
-        public async Task<int> inserir(ProdutoInfo produto)
-        {
-            string url = GlobalUtils.URLAplicacao + "/api/produto/inserir";
-            var args = new List<object>() { produto };
-            return await queryPut<int>(url, args.ToArray());
-        }
-
-        public async Task<int> alterar(ProdutoInfo produto)
-        {
-            string url = GlobalUtils.URLAplicacao + "/api/produto/alterar";
-            var args = new List<object>() { produto };
-            return await queryPut<int>(url, args.ToArray());
         }
     }
 }

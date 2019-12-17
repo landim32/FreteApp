@@ -1,11 +1,7 @@
 ﻿using Acr.UserDialogs;
 using Emagine.Base.Controls;
 using Emagine.Base.Estilo;
-using Emagine.Endereco.Model;
-using Emagine.Endereco.Utils;
 using Emagine.Login.Factory;
-using Emagine.Login.Model;
-using Emagine.Login.Utils;
 using Emagine.Pagamento.Factory;
 using Emagine.Pagamento.Model;
 using System;
@@ -72,7 +68,8 @@ namespace Emagine.Pagamento.Pages
             }
         }
 
-        public bool UsaCartaoOffline {
+        public bool UsaCartaoOffline
+        {
             get
             {
                 return _usaCartaoOffline;
@@ -210,7 +207,7 @@ namespace Emagine.Pagamento.Pages
                 var regraUsuario = UsuarioFactory.create();
                 var usuario = regraUsuario.pegarAtual();
 
-                var regraCartao = CartaoFactory.create();
+                var regraCartao = PagamentoCartaoFactory.create();
                 var cartoes = await regraCartao.listar(usuario.Id);
                 if (cartoes != null && cartoes.Count() > 0)
                 {
@@ -245,8 +242,7 @@ namespace Emagine.Pagamento.Pages
             catch (Exception erro)
             {
                 UserDialogs.Instance.HideLoading();
-                //UserDialogs.Instance.Alert(erro.Message, "Erro", "Fechar");
-                await DisplayAlert("Erro", erro.Message, "Entendi");
+                UserDialogs.Instance.Alert(erro.Message, "Erro", "Fechar");
             }
         }
 
@@ -292,43 +288,6 @@ namespace Emagine.Pagamento.Pages
             await Navigation.PushAsync(dinheiroPage);
         }
 
-        private async void gerarBoleto(PagamentoInfo pagamento) {
-            UserDialogs.Instance.ShowLoading("Gerando boleto...");
-            try
-            {
-                var regraPagamento = PagamentoFactory.create();
-                pagamento.DataVencimento = DateTime.Now.AddDays(3);
-                var retorno = await regraPagamento.pagar(pagamento);
-                if (retorno.Situacao == SituacaoPagamentoEnum.AguardandoPagamento)
-                {
-                    this.Pagamento = await regraPagamento.pegar(retorno.IdPagamento);
-                    UserDialogs.Instance.HideLoading();
-                    AoEfetuarPagamento?.Invoke(this, this.Pagamento);
-                }
-                else
-                {
-                    UserDialogs.Instance.HideLoading();
-                    //UserDialogs.Instance.Alert(retorno.Mensagem, "Erro", "Fechar");
-                    await DisplayAlert("Erro", retorno.Mensagem, "Entendi");
-                }
-            }
-            catch (Exception erro) {
-                UserDialogs.Instance.HideLoading();
-                //UserDialogs.Instance.Alert(erro.Message, "Erro", "Fechar");
-                await DisplayAlert("Erro", erro.Message, "Entendi");
-            }
-        }
-
-        private void preencherEndereco(PagamentoInfo pagamento, EnderecoInfo endereco) {
-            pagamento.Cep = endereco.Cep;
-            pagamento.Logradouro = endereco.Logradouro;
-            pagamento.Complemento = endereco.Complemento;
-            pagamento.Numero = endereco.Numero;
-            pagamento.Bairro = endereco.Bairro;
-            pagamento.Cidade = endereco.Cidade;
-            pagamento.Uf = endereco.Uf;
-        }
-
         private async void boletoClicked(object sender, EventArgs e)
         {
             if (Pagamento == null)
@@ -336,49 +295,28 @@ namespace Emagine.Pagamento.Pages
                 await DisplayAlert("Erro", "Nenhum pagamento informado!", "Fechar");
                 return;
             }
-            Pagamento.Tipo = TipoPagamentoEnum.Boleto;
-
-            if (Pagamento.TemEndereco)
+            UserDialogs.Instance.ShowLoading("Enviando...");
+            try
             {
-                gerarBoleto(Pagamento);
-            }
-            else
-            {
-                var regraUsuario = UsuarioFactory.create();
-                var usuario = regraUsuario.pegarAtual();
-                if (usuario.Enderecos.Count == 1)
+                Pagamento.Tipo = TipoPagamentoEnum.Boleto;
+                var regraPagamento = PagamentoFactory.create();
+                var retorno = await regraPagamento.pagar(Pagamento);
+                if (retorno.Situacao == SituacaoPagamentoEnum.AguardandoPagamento)
                 {
-                    preencherEndereco(Pagamento, usuario.Enderecos[0]);
-                    gerarBoleto(Pagamento);
-                }
-                else if (usuario.Enderecos.Count > 0)
-                {
-                    var enderecoListaPage = EnderecoUtils.gerarEnderecoLista((endereco) =>
-                    {
-                        preencherEndereco(Pagamento, endereco);
-                        gerarBoleto(Pagamento);
-                    });
-                    var enderecos = new List<EnderecoInfo>();
-                    foreach (var endereco in usuario.Enderecos) {
-                        enderecos.Add(endereco);
-                    }
-                    enderecoListaPage.Enderecos = enderecos;
-                    enderecoListaPage.Title = "Endereço de Cobrança";
-                    await Navigation.PushAsync(enderecoListaPage);
+                    Pagamento = await regraPagamento.pegar(retorno.IdPagamento);
+                    UserDialogs.Instance.HideLoading();
+                    AoEfetuarPagamento?.Invoke(this, Pagamento);
                 }
                 else
                 {
-                    var cepPage = EnderecoUtils.gerarBuscaPorCep((endereco) =>
-                    {
-                        usuario.Enderecos.Add(UsuarioEnderecoInfo.clonar(endereco));
-                        var regraLogin = UsuarioFactory.create();
-                        regraLogin.gravarAtual(usuario);
-
-                        preencherEndereco(Pagamento, endereco);
-                        gerarBoleto(Pagamento);
-                    });
-                    await Navigation.PushAsync(cepPage);
+                    UserDialogs.Instance.HideLoading();
+                    UserDialogs.Instance.Alert(retorno.Mensagem, "Erro", "Fechar");
                 }
+            }
+            catch (Exception erro)
+            {
+                UserDialogs.Instance.HideLoading();
+                UserDialogs.Instance.Alert(erro.Message, "Erro", "Fechar");
             }
         }
 
@@ -402,8 +340,7 @@ namespace Emagine.Pagamento.Pages
             catch (Exception erro)
             {
                 UserDialogs.Instance.HideLoading();
-                //UserDialogs.Instance.Alert(erro.Message, "Erro", "Fechar");
-                await DisplayAlert("Erro", erro.Message, "Entendi");
+                UserDialogs.Instance.Alert(erro.Message, "Erro", "Fechar");
             }
         }
     }

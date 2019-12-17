@@ -71,6 +71,9 @@ class LocalInfo implements JsonSerializable
      * @return LocalInfo
      */
     public static function fromJson($value) {
-        return new LocalInfo($value->latitude, $value->longitude);
+        $local = new LocalInfo();
+        $local->setLatitude($value->latitude);
+        $local->setLongitude($value->longitude);
+        return $local;
     }
 }

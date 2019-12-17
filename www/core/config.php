@@ -9,9 +9,9 @@ define("DB_PASS", "pikpro6");
 define("DB_HOST", "localhost");
 define("DB_USER", "root");
 define("DB_PASS", "eaa69cpxy2");
-define("DB_NAME", "nvoid");
+define("DB_NAME", "frete_simples");
 
-define("APP_NAME", "Emagine Carona");
+define("APP_NAME", "Frete Simples");
 
 define("EMAIL_REMETENTE", "rodrigo@emagine.com.br");
 define("NOME_REMETENTE", "Rodrigo Landim");
@@ -27,7 +27,7 @@ define("MAIL_USERNAME", "no-reply@emagine.com.br");
 define("MAIL_PASSWORD", "eaa69cpxy2");
 
 //define("TEMA_PATH", "/emagine-frete");
-define("TEMA_PATH", "/frete");
+define("TEMA_PATH", "/frete-simples");
 define('CACHE_DIR', "/var/www/emagine.com.br/upload/cache");
 define("UPLOAD_PATH", "/var/www/emagine.com.br/upload");
 
@@ -36,7 +36,7 @@ define("MAX_PAGE_COUNT", 10);
 define("MAIL_BASE_URL", "http://emagine.com.br" . TEMA_PATH);
 define("SITE_URL", "http://emagine.com.br" . TEMA_PATH);
 
-define("USUARIO_USA_FOTO", true);
+define("USUARIO_USA_FOTO", false);
 define("USUARIO_VALIDA_EMAIL", false);
 define("USUARIO_TELEFONE_OBRIGATORIO", true);
 define("USUARIO_CELULAR_OBRIGATORIO", false);
@@ -46,8 +46,7 @@ define("USUARIO_CPF_CNPJ_OBRIGATORIO", false);
 define("FRETE_ENVIA_EMAIL", false);
 define("FRETE_CALCULO_ROTA", true);
 //define("FRETE_VELOCIDADE_MEDIA", 30);
-//define("GOOGLE_MAPS_API", "AIzaSyBgrWD-mJvKK7DJbRFKECMxxUYXJXgHp-I");
-define("GOOGLE_MAPS_API", "AIzaSyD7_b-_087EpDgpI0LtIWqyN1obA_nEclo");
+define("GOOGLE_MAPS_API", "AIzaSyBgrWD-mJvKK7DJbRFKECMxxUYXJXgHp-I");
 
 define("PAGAMENTO_TIPO", "cielo");
 define("PAGAMENTO_DEBUG", true);

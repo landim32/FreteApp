@@ -1,10 +1,12 @@
-﻿using Emagine.Login.Model;
+﻿using Emagine.Base.Estilo;
+using Emagine.Login.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace Emagine.Produto.Model
 {
@@ -25,14 +27,8 @@ namespace Emagine.Produto.Model
         [JsonProperty("id_categoria")]
         public int IdCategoria { get; set; }
 
-        [JsonProperty("id_unidade")]
-        public int? IdUnidade { get; set; }
-
         [JsonProperty("categoria")]
         public CategoriaInfo Categoria { get; set; }
-
-        [JsonProperty("unidade")]
-        public UnidadeInfo Unidade { get; set; }
 
         [JsonProperty("slug")]
         public string Slug { get; set; }
@@ -42,9 +38,6 @@ namespace Emagine.Produto.Model
 
         [JsonProperty("foto")]
         public string Foto { get; set; }
-
-        [JsonProperty("foto_base64")]
-        public string FotoBase64 { get; set; }
 
         [JsonProperty("foto_url")]
         public string FotoUrl { get; set; }
@@ -64,6 +57,9 @@ namespace Emagine.Produto.Model
         [JsonProperty("volume_str")]
         public string VolumeStr { get; set; }
 
+        [JsonProperty("unidade")]
+        public string Unidade { get; set; }
+
         [JsonProperty("destaque")]
         public bool Destaque { get; set; }
 
@@ -78,9 +74,6 @@ namespace Emagine.Produto.Model
 
         [JsonIgnore]
         public int QuantidadeCarrinho { get; set; }
-
-        [JsonProperty("url")]
-        public string Url { get; set; }
 
         [JsonProperty("cod_situacao")]
         public int _CodSituacao {
@@ -115,28 +108,10 @@ namespace Emagine.Produto.Model
         }
 
         [JsonIgnore]
-        public string ValorStr {
-            get {
-                return Valor.ToString("N2") + " ";
-            }
-        }
-
-        [JsonIgnore]
-        public string ValorPromocaoStr
-        {
-            get
-            {
-                return ValorPromocao.ToString("N2") + " ";
-            }
-        }
-
-        /*
-        [JsonIgnore]
         public Color PromocaoCor {
             get {
                 return (EmPromocao) ? Estilo.Current.DangerColor : Estilo.Current.DefaultColor;
             }
         }
-        */
     }
 }

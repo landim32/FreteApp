@@ -98,7 +98,7 @@ namespace Emagine.Pedido.Controls
                 VerticalOptions = LayoutOptions.Start,
                 HorizontalTextAlignment = TextAlignment.End,
                 FontSize = 10,
-                Text = item.Produto.ValorFinal.ToString("N2")
+                Text = item.Produto.Valor.ToString("N2")
             }, 2, linha);
             linha++;
         }

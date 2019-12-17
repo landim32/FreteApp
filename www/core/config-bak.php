@@ -1,13 +1,17 @@
 <?php
 
-//define("DB_HOST", "localhost");
-//define("DB_USER", "root");
-//define("DB_PASS", "eaa69cpxy2");
-define("DB_HOST", "easybarcos.mysql.dbaas.com.br");
-define("DB_USER", "easybarcos");
-define("DB_PASS", "yoGo95b0");
+define("DB_HOST", "imobsync.com.br");
+define("DB_USER", "landim32");
+define("DB_PASS", "pikpro6");
 
-define("APP_NAME", "Easy Barcos");
+/*
+define("DB_HOST", "localhost");
+define("DB_USER", "root");
+define("DB_PASS", "eaa69cpxy2");
+*/
+define("DB_NAME", "nvoid");
+
+define("APP_NAME", "NVoid");
 
 define("EMAIL_REMETENTE", "rodrigo@emagine.com.br");
 define("NOME_REMETENTE", "Rodrigo Landim");
@@ -22,10 +26,8 @@ define("MAIL_EMAIL", "no-reply@emagine.com.br");
 define("MAIL_USERNAME", "no-reply@emagine.com.br");
 define("MAIL_PASSWORD", "eaa69cpxy2");
 
-define("DB_NAME", "easybarcos");
-define("TEMA_PATH", "/app");
-//define("TEMA_PATH", "/easy-barcos");
 //define("TEMA_PATH", "/emagine-frete");
+define("TEMA_PATH", "/nvoid");
 define('CACHE_DIR', "/var/www/emagine.com.br/upload/cache");
 define("UPLOAD_PATH", "/var/www/emagine.com.br/upload");
 
@@ -34,15 +36,16 @@ define("MAX_PAGE_COUNT", 10);
 define("MAIL_BASE_URL", "http://emagine.com.br" . TEMA_PATH);
 define("SITE_URL", "http://emagine.com.br" . TEMA_PATH);
 
+define("USUARIO_TELEFONE_OBRIGATORIO", true);
 define("USUARIO_USA_FOTO", false);
 
-define("FRETE_CALCULO_ROTA", false);
-define("FRETE_VELOCIDADE_MEDIA", 30);
+define("FRETE_ENVIA_EMAIL", false);
+define("FRETE_CALCULO_ROTA", true);
+//define("FRETE_VELOCIDADE_MEDIA", 30);
 define("GOOGLE_MAPS_API", "AIzaSyBgrWD-mJvKK7DJbRFKECMxxUYXJXgHp-I");
 
 define("PAGAMENTO_TIPO", "cielo");
+define("PAGAMENTO_DEBUG", true);
 define("CIELO_SANDBOX", false);
-define("CIELO_MERCHANT_ID", "2bbb3b8d-8362-408f-abec-3e70131812a2");
-define("CIELO_MERCHANT_KEY", "9YXPjNfCqE6IDVfT4o2H0LXh906aGo8B0qXJ8Yxg");
-
-define("BLL_FRETE", "Emagine\\Frete\\EasyBarcos\\BLL\\FreteBLL");
+define("CIELO_MERCHANT_ID", "9507b421-54fd-42f8-a6ae-0118185299c3");
+define("CIELO_MERCHANT_KEY", "ETrzj8F8rkE39nhjz9eXeOCuOA6kX42JiQ9NuOjE");

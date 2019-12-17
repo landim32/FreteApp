@@ -309,16 +309,5 @@ class FreteLocalInfo implements JsonSerializable {
 		return $local;
 	}
 
-    /**
-     * @param LocalInfo $local
-     * @return FreteLocalInfo
-     */
-	public static function fromLocal(LocalInfo $local) {
-        $localFrete = new FreteLocalInfo();
-        $localFrete->setLatitude($local->getLatitude());
-        $localFrete->setLongitude($local->getLongitude());
-        return $localFrete;
-    }
-
 }
 

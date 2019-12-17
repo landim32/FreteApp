@@ -155,8 +155,8 @@ namespace Emagine.Endereco.Controls
             set {
                 if (value != null)
                 {
-                    //if(value.Cep != Regex.Replace(_cepEntry.Text, "[^0-9]+", ""))
-                    _cepEntry.Text = value.Cep;
+                    if(value.Cep != Regex.Replace(_cepEntry.Text, "[^0-9]+", ""))
+                        _cepEntry.Text = value.Cep;
                     _ufEntry.Text = value.Uf;
                     _cidadeEntry.Text = value.Cidade;
                     _bairroEntry.Text = value.Bairro;

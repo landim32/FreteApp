@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Acr.UserDialogs;
 using Emagine.Base.BLL;
 using Emagine.Base.Estilo;
 using Emagine.Base.Model;
+using Emagine.Frete.Model;
 using Emagine.Login.BLL;
-using Emagine.Login.Factory;
+using EmagineFrete.Model;
+using EmagineFrete.Utils;
 using Xamarin.Forms;
+using Xamarin.Forms.Maps;
 
-namespace Frete.Pages
+namespace EmagineFrete.Pages
 {
     public class FormMailNvoid : ContentPage
     {
@@ -21,10 +26,12 @@ namespace Frete.Pages
         private Entry _DescricaoEntry;
         private Button _EnviarButton;
         private Label _ObservacaoLbl;
+        private FreteInfo _Info;
 
-        public FormMailNvoid()
+        public FormMailNvoid(FreteInfo info = null)
         {
             Title = "#Exclusive";
+            _Info = info;
             inicializarComponente();
             Content = new StackLayout
             {
@@ -96,16 +103,13 @@ namespace Frete.Pages
         }
         private void inicializarComponente()
         {
-            var regraUsuario = UsuarioFactory.create();
-            var usuario = regraUsuario.pegarAtual();
-
             _NomeEntry = new Entry
             {
                 Placeholder = "Nome",
                 Keyboard = Keyboard.Telephone,
                 VerticalOptions = LayoutOptions.Start,
                 HorizontalOptions = LayoutOptions.Fill,
-                Text = usuario.Nome
+                Text = new UsuarioBLL().pegarAtual().Nome
             };
             _TelefoneEntry = new Entry
             {
@@ -164,7 +168,7 @@ namespace Frete.Pages
             {
                 if(validarCampos()){
                     UserDialogs.Instance.ShowLoading("Enviando...");
-                    //var user = new UsuarioBLL().pegarAtual();
+                    var user = new UsuarioBLL().pegarAtual();
                     var msg = new MensagemInfo()
                     {
                         Assunto = "Frete especial",
@@ -176,7 +180,11 @@ namespace Frete.Pages
                                                   "Tipo de pessoa: " + (string)_TipoPessoa.SelectedItem + "<BR>" +
                                                   "Descricao: " + _DescricaoEntry.Text + "<BR>"
 
+
                     };
+                    if(_Info != null){
+                        msg.Mensagem += await geraBlocoLocaisAsync();
+                    }
                     if ((await new MensagemBLL().enviar(msg)))
                     {
                         UserDialogs.Instance.HideLoading();
@@ -192,6 +200,43 @@ namespace Frete.Pages
                 }
             };
            
+        }
+
+        private string getTipoEndereco(FreteLocalTipoEnum tipo)
+        {
+            switch(tipo)
+            {
+                case FreteLocalTipoEnum.Destino:
+                    return "Destino";
+                case FreteLocalTipoEnum.Parada:
+                    return "Parada";
+                case FreteLocalTipoEnum.Saida:
+                    return "Saída";
+            }
+            return "Parada";
+        }
+
+        private async System.Threading.Tasks.Task<string> geraBlocoLocaisAsync()
+        {
+            var ret = new StringBuilder();
+
+            ret.Append("Locais : <BR>");
+            foreach(var local in _Info.Locais){
+                if (local.Latitude.HasValue && local.Longitude.HasValue)
+                {
+                    var mapaPosicao = new Position(local.Latitude.Value, local.Longitude.Value);
+                    UserDialogs.Instance.ShowLoading("Obtendo endereço...");
+                    var retGeocoder = await new Geocoder().GetAddressesForPositionAsync(mapaPosicao);
+                    UserDialogs.Instance.HideLoading();
+                    if (retGeocoder != null && retGeocoder.Count() > 0)
+                    {
+                        ret.Append("    " + local.Tipo + " no endereco: " + retGeocoder.LastOrDefault() + "<BR>");
+                    }
+                }       
+            }
+            ret.Append("Distância: " + _Info.DistanciaStr + "<BR>");
+
+            return ret.ToString();
         }
     }
 }

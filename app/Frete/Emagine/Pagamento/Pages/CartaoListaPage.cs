@@ -17,7 +17,7 @@ namespace Emagine.Pagamento.Pages
     public class CartaoListaPage : ContentPage
     {
         private PagamentoInfo _pagamento;
-        private IList<CartaoInfo> _cartoes;
+        private IList<PagamentoCartaoInfo> _cartoes;
 
         private StackLayout _mainLayout;
         private ListView _cartaoListView;
@@ -30,26 +30,7 @@ namespace Emagine.Pagamento.Pages
             Title = "Meus Cartões";
             Style = Estilo.Current[Estilo.TELA_PADRAO];
 
-            /*
-            ToolbarItems.Add(new IconToolbarItem
-            {
-                Text = "Adicionar",
-                Icon = "fa-plus",
-                IconColor = Estilo.Current.BarTitleColor,
-                Order = ToolbarItemOrder.Primary,
-                Command = new Command(() => {
-                    var cepPage = EnderecoUtils.gerarBuscaPorCep((endereco) =>
-                    {
-                        _enderecos.Add(endereco);
-                        AoAtualizar?.Invoke(this, _enderecos);
-                        Navigation.PopAsync();
-                    }, false);
-                    Navigation.PushAsync(cepPage);
-                })
-            });
-            */
-
-            _cartoes = new List<CartaoInfo>();
+            _cartoes = new List<PagamentoCartaoInfo>();
             inicializarComponente();
             _mainLayout = new StackLayout
             {
@@ -87,7 +68,7 @@ namespace Emagine.Pagamento.Pages
             }
         }
 
-        public IList<CartaoInfo> Cartoes {
+        public IList<PagamentoCartaoInfo> Cartoes {
             get {
                 return _cartoes;
             }
@@ -104,20 +85,14 @@ namespace Emagine.Pagamento.Pages
             {
                 HorizontalOptions = LayoutOptions.Fill,
                 VerticalOptions = LayoutOptions.End,
-                Margin = new Thickness(8, 0, 8, 10),
+                Margin = new Thickness(8, 0),
                 Style = Estilo.Current[Estilo.BTN_PRINCIPAL],
                 Text = "Novo cartão"
             };
             _NovoButton.Clicked += (sender, e) => {
-                var cartaoPage = new CartaoPage
-                {
-                    Title = "Cartão de Crédito",
-                    UsaCredito = true,
-                    UsaDebito = false,
+                Navigation.PushAsync(new CartaoPage {
                     Pagamento = _pagamento
-                };
-                cartaoPage.AoEfetuarPagamento += AoEfetuarPagamento;
-                Navigation.PushAsync(cartaoPage);
+                });
             };
             _cartaoListView = new ListView {
                 HasUnevenRows = true,
@@ -128,42 +103,16 @@ namespace Emagine.Pagamento.Pages
             _cartaoListView.SetBinding(ListView.ItemsSourceProperty, new Binding("."));
         }
 
-        public void excluir(CartaoInfo cartao) {
-            UserDialogs.Instance.ShowLoading("Excluindo cartão...");
-            try
-            {
-                var regraCartao = CartaoFactory.create();
-                regraCartao.excluir(cartao.Id);
-                if (_cartoes != null) {
-                    _cartoes.Remove(cartao);
-                    _cartaoListView.ItemsSource = null;
-                    _cartaoListView.ItemsSource = _cartoes;
-                }
-                UserDialogs.Instance.HideLoading();
-            }
-            catch (Exception erro)
-            {
-                UserDialogs.Instance.HideLoading();
-                //UserDialogs.Instance.Alert(erro.Message, "Erro", "Fechar");
-                DisplayAlert("Erro", erro.Message, "Entendi");
-            }
-        }
-
         private async void cartaoListaItemTapped(object sender, ItemTappedEventArgs e)
         {
             if (e == null)
                 return;
 
-            var cartao = (CartaoInfo)((ListView)sender).SelectedItem;
+            PagamentoCartaoInfo entrInfo = (PagamentoCartaoInfo)((ListView)sender).SelectedItem;
             UserDialogs.Instance.ShowLoading("Enviando...");
             try
             {
                 var regraPagamento = PagamentoFactory.create();
-
-                _pagamento.Token = cartao.Token;
-                _pagamento.CVV = cartao.CVV;
-                _pagamento.Bandeira = cartao.Bandeira;
-
                 var retorno = await regraPagamento.pagarComToken(_pagamento);
                 if (retorno.Situacao == SituacaoPagamentoEnum.Pago)
                 {
@@ -180,8 +129,7 @@ namespace Emagine.Pagamento.Pages
             catch (Exception erro)
             {
                 UserDialogs.Instance.HideLoading();
-                //UserDialogs.Instance.Alert(erro.Message, "Erro", "Fechar");
-                await DisplayAlert("Erro", erro.Message, "Entendi");
+                UserDialogs.Instance.Alert(erro.Message, "Erro", "Fechar");
             }
         }
     }

@@ -15,7 +15,6 @@ using Emagine.Base.Utils;
 using Emagine.Base.Model;
 using Emagine;
 using Xfx;
-using ImageCircle.Forms.Plugin.Droid;
 
 [assembly: UsesFeature("android.hardware.location", Required = false)]
 [assembly: UsesFeature("android.hardware.location.gps", Required = false)]
@@ -23,8 +22,7 @@ using ImageCircle.Forms.Plugin.Droid;
 
 namespace Frete.Droid
 {
-    //[Activity(Label = "Emagine", Icon = "@drawable/icon", Theme = "@style/MyTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
-    [Activity(Label = "E-Carona", Icon = "@drawable/icon", Theme = "@style/MyTheme", ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "NVoid", Icon = "@drawable/icon", Theme = "@style/MyTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle bundle)
@@ -37,18 +35,14 @@ namespace Frete.Droid
 
             UserDialogs.Init(this);
             Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
-            XfxControls.Init();
 
+
+            XfxControls.Init();
             global::Xamarin.Forms.Forms.Init(this, bundle);
-            ImageCircleRenderer.Init();
             Xamarin.FormsMaps.Init(this, bundle);
 
-            FormsPlugin.Iconize.Droid.IconControls.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
 
-            //TemaUtils.CorPrincipal = Xamarin.Forms.Color.FromHex("#ff6100");
-            //TemaUtils.CorSecundaria = Xamarin.Forms.Color.FromHex("#ce3400");
-            //GlobalUtils.setAplicacaoAtual(AplicacaoEnum.APLICACAO03);
-            //GlobalUtils.setURLAplicacao("http://emagine.com.br/nvoid");
+            FormsPlugin.Iconize.Droid.IconControls.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
 
             LoadApplication(new App());
         }

@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Xamarin.Forms.3.0.0.446417\build\netstandard1.0\Xamarin.Forms.props" Condition="Exists('..\packages\Xamarin.Forms.3.0.0.446417\build\netstandard1.0\Xamarin.Forms.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -12,8 +11,6 @@
     <AssemblyName>FreteSimples</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,11 +29,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="Cells\DefaultCell.cs" />
+    <Compile Include="Cells\FreteCell.cs" />
+    <Compile Include="Cells\PedidoPendenteCell.cs" />
+    <Compile Include="Cells\PointTransporteCell.cs" />
+    <Compile Include="Controls\FilterItem.cs" />
+    <Compile Include="Controls\FotoImageButton.cs" />
+    <Compile Include="Controls\MenuButton.cs" />
+    <Compile Include="Controls\ProdutoButton.cs" />
     <Compile Include="Emagine\Base\BLL\RestAPIBase.cs" />
     <Compile Include="Emagine\Base\Cells\MenuItemCell.cs" />
-    <Compile Include="Emagine\Base\Controls\CircleIconButton.cs" />
     <Compile Include="Emagine\Base\Controls\DropDownList.cs" />
-    <Compile Include="Emagine\Base\Controls\FormattedNumberEntry.cs" />
     <Compile Include="Emagine\Base\Controls\FotoImageButton.cs" />
     <Compile Include="Emagine\Base\Controls\MenuButton.cs" />
     <Compile Include="Emagine\Base\Controls\BaseDropDownList.cs" />
@@ -45,11 +48,6 @@
     <Compile Include="Emagine\Base\Estilo\EstiloBotao.cs" />
     <Compile Include="Emagine\Base\Estilo\EstiloBoxView.cs" />
     <Compile Include="Emagine\Base\Estilo\EstiloDatePicker.cs" />
-    <Compile Include="Emagine\Base\Estilo\EstiloImage.cs" />
-    <Compile Include="Emagine\Base\Estilo\EstiloProduto.cs" />
-    <Compile Include="Emagine\Base\Estilo\EstiloQuantidade.cs" />
-    <Compile Include="Emagine\Base\Estilo\EstiloTotal.cs" />
-    <Compile Include="Emagine\Base\Estilo\EstiloXfxEntry.cs" />
     <Compile Include="Emagine\Base\Estilo\EstiloEntry.cs" />
     <Compile Include="Emagine\Base\Estilo\EstiloFrame.cs" />
     <Compile Include="Emagine\Base\Estilo\EstiloIcon.cs" />
@@ -62,16 +60,15 @@
     <Compile Include="Emagine\Base\Estilo\EstiloSearch.cs" />
     <Compile Include="Emagine\Base\Estilo\EstiloStackLayout.cs" />
     <Compile Include="Emagine\Base\Estilo\EstiloTimePicker.cs" />
+    <Compile Include="Emagine\Base\Estilo\EstiloXfxEntry.cs" />
     <Compile Include="Emagine\Base\IBLL\IAppVersion.cs" />
+    <Compile Include="Emagine\Base\IBLL\IImagemBLL.cs" />
     <Compile Include="Emagine\Base\Model\AplicacaoEnum.cs" />
-    <Compile Include="Emagine\Base\Model\AvaliacaoInfo.cs" />
     <Compile Include="Emagine\Base\Model\IPermissao.cs" />
     <Compile Include="Emagine\Base\Model\MenuItemInfo.cs" />
-    <Compile Include="Emagine\Base\Pages\AvaliePage.cs" />
-    <Compile Include="Emagine\Base\Pages\BlankPage.cs" />
-    <Compile Include="Emagine\Base\Pages\DocumentoPage.cs" />
     <Compile Include="Emagine\Base\Pages\MenuPage.cs" />
     <Compile Include="Emagine\Base\Pages\RootPage.cs" />
+    <Compile Include="Emagine\Base\Utils\ImagemUtils.cs" />
     <Compile Include="Emagine\Base\Utils\NavegacaoUtils.cs" />
     <Compile Include="Emagine\Base\Utils\PermissaoUtils.cs" />
     <Compile Include="Emagine\Base\Utils\VersionUtils.cs" />
@@ -98,6 +95,7 @@
     <Compile Include="Emagine\Endereco\Pages\BairroBuscaPage.cs" />
     <Compile Include="Emagine\Endereco\Pages\CepPage.cs" />
     <Compile Include="Emagine\Endereco\Pages\CidadeBuscaPage.cs" />
+    <Compile Include="Emagine\Endereco\Pages\EnderecoBuscaPage.cs" />
     <Compile Include="Emagine\Endereco\Pages\EnderecoFormPage.cs" />
     <Compile Include="Emagine\Endereco\Pages\EnderecoListaPage.cs" />
     <Compile Include="Emagine\Endereco\Pages\LogradouroBuscaPage.cs" />
@@ -105,59 +103,43 @@
     <Compile Include="Emagine\Endereco\Utils\EnderecoUtils.cs" />
     <Compile Include="Emagine\Frete\BLL\TipoCarroceriaBLL.cs" />
     <Compile Include="Emagine\Frete\BLL\TipoVeiculoBLL.cs" />
-    <Compile Include="Emagine\Frete\Cells\FreteMotoristaCell.cs" />
-    <Compile Include="Emagine\Frete\Cells\FreteCellOld.cs" />
+    <Compile Include="Emagine\Frete\Cells\LocalRetiradaCell.cs" />
     <Compile Include="Emagine\Frete\Cells\TipoVeiculoCell.cs" />
-    <Compile Include="Emagine\Frete\Controls\FreteAcaoView.cs" />
     <Compile Include="Emagine\Frete\Factory\CadastroMotoristaPageFactory.cs" />
     <Compile Include="Emagine\Frete\Factory\TipoCarroceriaFactory.cs" />
     <Compile Include="Emagine\Frete\Factory\TipoVeiculoFactory.cs" />
     <Compile Include="Emagine\Frete\Model\AceiteEnvioInfo.cs" />
+    <Compile Include="Emagine\Frete\Model\AceiteRetornoInfo.cs" />
     <Compile Include="Emagine\Frete\Model\MotoristaEnvioInfo.cs" />
     <Compile Include="Emagine\Frete\Model\TipoCarroceriaInfo.cs" />
     <Compile Include="Emagine\Frete\Model\TipoVeiculoInfo.cs" />
-    <Compile Include="Emagine\Frete\Pages\AceitePage.cs" />
-    <Compile Include="Emagine\Frete\Pages\CadastroMotoristaDocumentoPage.cs" />
-    <Compile Include="Emagine\Frete\Pages\EnderecoEntregaPage.cs" />
-    <Compile Include="Emagine\Frete\Pages\EnderecoRetiradaPage.cs" />
-    <Compile Include="Emagine\Frete\Pages\FreteAgendaPage.cs" />
-    <Compile Include="Emagine\Frete\Pages\FreteFormPage.cs" />
-    <Compile Include="Emagine\Frete\Pages\FreteListaPage.cs" />
-    <Compile Include="Emagine\Frete\Pages\FretePage.cs" />
+    <Compile Include="Emagine\Frete\Pages\FreteUsuarioFormPage.cs" />
     <Compile Include="Emagine\Frete\Pages\LocalRetiradaListaPage.cs" />
-    <Compile Include="Emagine\Frete\Pages\UsuarioSelecionePage.cs" />
-    <Compile Include="Emagine\Frete\Utils\CaronaUtils.cs" />
     <Compile Include="Emagine\Frete\Utils\FreteUtils.cs" />
+    <Compile Include="Emagine\Frete\Utils\LoginUtils.cs" />
     <Compile Include="Emagine\Frete\Utils\MotoristaUtils.cs" />
-    <Compile Include="Emagine\Frete\Utils\PagamentoUtils.cs" />
     <Compile Include="Emagine\GPS\BLL\GPSBLL.cs" />
     <Compile Include="Emagine\GPS\Model\GPSLocalInfo.cs" />
+    <Compile Include="Emagine\GPS\Model\GPSSinalEnum.cs" />
     <Compile Include="Emagine\GPS\Model\LocalEventArgs.cs" />
     <Compile Include="Emagine\GPS\Model\LocalEventHandler.cs" />
+    <Compile Include="Emagine\GPS\Utils\DistanciaUtils.cs" />
     <Compile Include="Emagine\GPS\Utils\GPSUtils.cs" />
-    <Compile Include="Emagine\Login\BLL\Base\UsuarioBLL.cs" />
-    <Compile Include="Emagine\Login\BLL\Mobile\UsuarioBLL.cs" />
     <Compile Include="Emagine\Login\Factory\UsuarioFormPageFactory.cs" />
-    <Compile Include="Emagine\Login\IBLL\IUsuarioBLL.cs" />
     <Compile Include="Emagine\Login\Model\UsuarioEnderecoInfo.cs" />
     <Compile Include="Emagine\Login\Pages\UsuarioFormPage.cs" />
     <Compile Include="Emagine\Login\Pages\UsuarioGerenciaPage.cs" />
-    <Compile Include="Emagine\Login\Pages\UsuarioSelecionaPage.cs" />
-    <Compile Include="Emagine\Login\Utils\LoginUtils.cs" />
-    <Compile Include="Emagine\Mapa\BLL\MapaBuscaBLL.cs" />
+    <Compile Include="Emagine\Mapa\Cells\ResultadoBuscaCell.cs" />
     <Compile Include="Emagine\Mapa\Controls\MapaDropDownList.cs" />
     <Compile Include="Emagine\Mapa\Controls\MapTapEventArgs.cs" />
-    <Compile Include="Emagine\Mapa\Factory\MapaBuscaFactory.cs" />
     <Compile Include="Emagine\Mapa\Model\GoogleLocationPredictions.cs" />
-    <Compile Include="Emagine\Mapa\Model\LocalInfo.cs" />
-    <Compile Include="Emagine\Mapa\Model\MapaAutoCompleteEnum.cs" />
     <Compile Include="Emagine\Mapa\Model\MapaLocalInfo.cs" />
-    <Compile Include="Emagine\Mapa\Model\MapaRotaInfo.cs" />
     <Compile Include="Emagine\Mapa\Model\TipoPontoTransporteEnum.cs" />
     <Compile Include="Emagine\Frete\Pages\AvisoPage.cs" />
     <Compile Include="Emagine\Frete\Pages\CadastroMotoristaPage.cs" />
     <Compile Include="Emagine\Frete\Pages\CadastroEmpresaPage.cs" />
-    <Compile Include="Emagine\Frete\Pages\FreteUsuarioFormPage.cs" />
+    <Compile Include="Emagine\Frete\Pages\FreteFormPage.cs" />
+    <Compile Include="Emagine\Login\BLL\UsuarioBLL.cs" />
     <Compile Include="Emagine\Login\Factory\UsuarioFactory.cs" />
     <Compile Include="Emagine\Login\Model\LoginInfo.cs" />
     <Compile Include="Emagine\Login\Model\SituacaoEnum.cs" />
@@ -170,19 +152,15 @@
     <Compile Include="Emagine\Mapa\Model\GoogleGeocodingResult.cs" />
     <Compile Include="Emagine\Mapa\Model\GoogleGeometry.cs" />
     <Compile Include="Emagine\Mapa\Model\GoogleLocation.cs" />
-    <Compile Include="Emagine\Mapa\Pages\MapaAcompanhaPage.cs" />
-    <Compile Include="Emagine\Frete\Pages\RotaSelecionaPage.cs" />
-    <Compile Include="Emagine\Mapa\Pages\MapaRotaPage.cs" />
-    <Compile Include="Emagine\Frete\Pages\CaronaFormPage.cs" />
     <Compile Include="Emagine\Mapa\Utils\MapaUtils.cs" />
-    <Compile Include="Emagine\Pagamento\BLL\CartaoBLL.cs" />
     <Compile Include="Emagine\Pagamento\BLL\PagamentoBLL.cs" />
+    <Compile Include="Emagine\Pagamento\BLL\PagamentoCartaoBLL.cs" />
     <Compile Include="Emagine\Pagamento\Cells\CartaoCell.cs" />
     <Compile Include="Emagine\Pagamento\Controls\NumeroCartaoEntry.cs" />
-    <Compile Include="Emagine\Pagamento\Factory\CartaoFactory.cs" />
+    <Compile Include="Emagine\Pagamento\Factory\PagamentoCartaoFactory.cs" />
     <Compile Include="Emagine\Pagamento\Factory\PagamentoFactory.cs" />
     <Compile Include="Emagine\Pagamento\Model\BandeiraCartaoEnum.cs" />
-    <Compile Include="Emagine\Pagamento\Model\CartaoInfo.cs" />
+    <Compile Include="Emagine\Pagamento\Model\PagamentoCartaoInfo.cs" />
     <Compile Include="Emagine\Pagamento\Model\PagamentoInfo.cs" />
     <Compile Include="Emagine\Pagamento\Model\PagamentoItemInfo.cs" />
     <Compile Include="Emagine\Pagamento\Model\PagamentoOpcaoInfo.cs" />
@@ -195,17 +173,31 @@
     <Compile Include="Emagine\Pagamento\Pages\CartaoPage.cs" />
     <Compile Include="Emagine\Pagamento\Pages\DinheiroPage.cs" />
     <Compile Include="Emagine\Pagamento\Pages\PagamentoMetodoPage.cs" />
-    <Compile Include="Pages\CustomCadastroMotoristaPage.cs" />
-    <Compile Include="Pages\CustomUsuarioFormPage.cs" />
-    <Compile Include="Pages\CustomUsuarioGerenciaPage.cs" />
-    <Compile Include="Pages\MotoristaTermoPage.cs" />
-    <Compile Include="Pages\PagamentoSucessoPage.cs" />
+    <Compile Include="Model\PontoTransporte.cs" />
+    <Compile Include="Pages\AcompanhaEntrega.cs" />
+    <Compile Include="Pages\AcompanhaEntregaMotorista.cs" />
+    <Compile Include="Pages\CadastroPage.cs" />
+    <Compile Include="Pages\ConfirmaEntregaPage.cs" />
+    <Compile Include="Pages\CorridasEmEspera.cs" />
+    <Compile Include="Pages\DetalheProdutoPage.cs" />
+    <Compile Include="Pages\FormMailNvoid.cs" />
+    <Compile Include="Pages\FreteListaPage.cs" />
+    <Compile Include="Pages\FretePage.cs" />
+    <Compile Include="Pages\ImagemProdutoPage.cs" />
+    <Compile Include="Pages\InicialPage.cs" />
+    <Compile Include="Pages\MapaPage.cs" />
+    <Compile Include="Pages\PagamentoPage.cs" />
+    <Compile Include="Pages\PoliticaDePrivacidade.cs" />
+    <Compile Include="Pages\PrincipalPage.cs" />
+    <Compile Include="Pages\ProdutoPage.cs" />
+    <Compile Include="Pages\RotaProdutoPage.cs" />
+    <Compile Include="Pages\SobrePage.cs" />
+    <Compile Include="Popups\CadastroTipoPopup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Emagine\Frete\Model\CadastroTipoEnum.cs" />
     <Compile Include="Emagine\Frete\Popups\CadastroTipoPopup.cs" />
     <Compile Include="Emagine\Mapa\Pages\MapaPageOld.cs" />
     <Compile Include="Emagine\Frete\Pages\PagamentoPage.cs" />
-    <Compile Include="Emagine\Frete\Pages\FretePageOld.cs" />
     <Compile Include="Emagine\Frete\Cells\FreteCell.cs" />
     <Compile Include="Emagine\Frete\Model\FreteOldInfo.cs" />
     <Compile Include="Emagine\Frete\Model\SituacaoFreteEnum.cs" />
@@ -221,7 +213,6 @@
     <Compile Include="Emagine\Frete\Model\FreteSituacaoEnum.cs" />
     <Compile Include="Emagine\Frete\Factory\MotoristaFactory.cs" />
     <Compile Include="Emagine\Frete\Model\TipoVeiculoEnum.cs" />
-    <Compile Include="Emagine\Mapa\Cells\ResultadoBuscaCell.cs" />
     <Compile Include="Emagine\Mapa\Model\PesquisaLocalizacaoInfo.cs" />
     <Compile Include="Emagine\Mapa\Model\GoogleLocationInfo.cs" />
     <Compile Include="Emagine\Base\Utils\HttpUtils.cs" />
@@ -233,24 +224,18 @@
     <Compile Include="Emagine\Frete\Model\MotoristaFreteInfo.cs" />
     <Compile Include="Emagine\Frete\Model\LocalInfo.cs" />
     <Compile Include="Emagine\Frete\Pages\FreteResumoPage.cs" />
-    <Compile Include="Emagine\Frete\Model\AceiteRetornoInfo.cs" />
-    <Compile Include="Emagine\Frete\BLL\AtualizacaoFrete.cs" />
-    <Compile Include="Emagine\Frete\Pages\AcompanhaFreteMotoristaPage.cs" />
     <Compile Include="Emagine\Frete\Model\FreteRetornoInfo.cs" />
     <Compile Include="Emagine\Base\Utils\FormatUtils.cs" />
-    <Compile Include="Pages\SobrePage.cs" />
     <Compile Include="Emagine\Base\Utils\GlobalUtils.cs" />
     <Compile Include="Emagine\Base\Model\MensagemInfo.cs" />
     <Compile Include="Emagine\Base\BLL\MensagemBLL.cs" />
     <Compile Include="Emagine\Mapa\Model\GoogleGeocodingInfo.cs" />
-    <Compile Include="Pages\FormMailNvoid.cs" />
-    <Compile Include="Pages\PoliticaDePrivacidade.cs" />
     <Compile Include="Emagine\Frete\Pages\TipoVeiculoSelecionaPage.cs" />
     <Compile Include="Emagine\Frete\Cells\TipoCarroceriaCell.cs" />
     <Compile Include="Emagine\Base\Controls\SelecionarEntry.cs" />
     <Compile Include="Emagine\Frete\Pages\CarroceriaSelecionaPage.cs" />
     <Compile Include="Emagine\Frete\Pages\FreteMotoristaListaPage.cs" />
-    <Compile Include="Emagine\Frete\Cells\FreteMotoristaOldCell.cs" />
+    <Compile Include="Emagine\Frete\Cells\FreteMotoristaCell.cs" />
     <Compile Include="Emagine\Frete\Pages\FreteAvisoPage.cs" />
     <Compile Include="Emagine\Frete\Pages\FreteFiltroPage.cs" />
     <Compile Include="Emagine\Frete\Factory\FreteFactory.cs" />
@@ -258,6 +243,7 @@
     <Compile Include="Emagine\Frete\Cells\DisponibilidadeCell.cs" />
     <Compile Include="Emagine\Frete\Model\DisponibilidadeInfo.cs" />
     <Compile Include="Emagine\Frete\Pages\DisponibilidadeFormPage.cs" />
+    <Compile Include="Emagine\Frete\Pages\FreteClienteListaPage.cs" />
     <Compile Include="Emagine\Frete\Cells\FreteEmpresaCell.cs" />
     <Compile Include="Emagine\Base\Views\AvaliacaoView.cs" />
     <Compile Include="Emagine\Frete\Model\PosicionamentoInfo.cs" />
@@ -265,16 +251,14 @@
     <Compile Include="Emagine\Mapa\Pages\MapaPontoPage.cs" />
     <Compile Include="Emagine\Frete\Pages\FreteHistoricoPage.cs" />
     <Compile Include="Emagine\Base\Pages\AvaliarPage.cs" />
+    <Compile Include="Emagine\Frete\Pages\EnderecoRetiradaPage.cs" />
+    <Compile Include="Emagine\Frete\Pages\EnderecoEntregaPage.cs" />
     <Compile Include="Emagine\Frete\Model\FreteFiltroInfo.cs" />
     <Compile Include="Emagine\Frete\Model\FreteHistoricoInfo.cs" />
-    <Compile Include="Emagine\Frete\Cells\FaturaCell.cs" />
-    <Compile Include="Emagine\Frete\Cells\LocalRetiradaCell.cs" />
-    <Compile Include="Utils\FreteUtils.cs" />
+    <Compile Include="Utils\FormatUtils.cs" />
+    <Compile Include="Utils\HttpUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="ImageCircle.Forms.Plugin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xam.Plugins.Forms.ImageCircle.3.0.0.5\lib\netstandard1.0\ImageCircle.Forms.Plugin.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\portable-net45+win8+wp8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -320,29 +304,17 @@
     <Reference Include="Plugin.Media">
       <HintPath>..\packages\Xam.Plugin.Media.3.0.1\lib\netstandard1.0\Plugin.Media.dll</HintPath>
     </Reference>
-    <Reference Include="SuaveControls.FloatingActionButton, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SuaveControls.FloatingActionButton.2018.1.5\lib\portable45-net45+win8+wpa81\SuaveControls.FloatingActionButton.dll</HintPath>
+    <Reference Include="Xamarin.Forms.Core">
+      <HintPath>..\packages\Xamarin.Forms.2.5.0.91635\lib\portable-win+net45+wp80+win81+wpa81\Xamarin.Forms.Core.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Forms.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xamarin.Forms.3.0.0.446417\lib\netstandard1.0\Xamarin.Forms.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Forms.Core.Design, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xamarin.Forms.3.0.0.446417\lib\netstandard1.0\Design\Xamarin.Forms.Core.Design.dll</HintPath>
+    <Reference Include="Xamarin.Forms.Platform">
+      <HintPath>..\packages\Xamarin.Forms.2.5.0.91635\lib\portable-win+net45+wp80+win81+wpa81\Xamarin.Forms.Platform.dll</HintPath>
     </Reference>
     <Reference Include="Xamarin.Forms.Maps">
       <HintPath>..\packages\Xamarin.Forms.Maps.2.5.0.91635\lib\portable-win+net45+wp80+win81+wpa81\Xamarin.Forms.Maps.dll</HintPath>
     </Reference>
-    <Reference Include="Xamarin.Forms.Platform, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xamarin.Forms.3.0.0.446417\lib\netstandard1.0\Xamarin.Forms.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Forms.Xaml, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xamarin.Forms.3.0.0.446417\lib\netstandard1.0\Xamarin.Forms.Xaml.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Forms.Xaml.Design, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xamarin.Forms.3.0.0.446417\lib\netstandard1.0\Design\Xamarin.Forms.Xaml.Design.dll</HintPath>
+    <Reference Include="Xamarin.Forms.Xaml">
+      <HintPath>..\packages\Xamarin.Forms.2.5.0.91635\lib\portable-win+net45+wp80+win81+wpa81\Xamarin.Forms.Xaml.dll</HintPath>
     </Reference>
     <Reference Include="Xfx.Controls, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Xfx.Controls.1.1.3\lib\portable-net45+win8+wpa81+wp8\Xfx.Controls.dll</HintPath>
@@ -351,14 +323,10 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="BLL\" />
+    <Folder Include="Emagine\Frete\Controls\" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>Este projeto faz referência a pacotes do NuGet que não estão presentes neste computador. Use a Restauração de Pacotes do NuGet para baixá-los.  Para obter mais informações, consulte http://go.microsoft.com/fwlink/?LinkID=322105. O arquivo ausente é {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Xamarin.Forms.3.0.0.446417\build\netstandard1.0\Xamarin.Forms.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Xamarin.Forms.3.0.0.446417\build\netstandard1.0\Xamarin.Forms.props'))" />
-    <Error Condition="!Exists('..\packages\Xamarin.Forms.3.0.0.446417\build\netstandard1.0\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Xamarin.Forms.3.0.0.446417\build\netstandard1.0\Xamarin.Forms.targets'))" />
-  </Target>
-  <Import Project="..\packages\Xamarin.Forms.3.0.0.446417\build\netstandard1.0\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.3.0.0.446417\build\netstandard1.0\Xamarin.Forms.targets')" />
+  <Import Project="..\packages\Xamarin.Forms.2.5.0.91635\build\portable-win+net45+wp80+win81+wpa81\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.5.0.91635\build\portable-win+net45+wp80+win81+wpa81\Xamarin.Forms.targets')" />
 </Project>

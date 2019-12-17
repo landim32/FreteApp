@@ -6,7 +6,6 @@ use Emagine\Frete\Model\AceiteRetornoInfo;
 use Emagine\Frete\Model\FreteHistoricoInfo;
 use Emagine\Frete\Model\FreteRetornoInfo;
 use Emagine\Frete\Model\FreteInfo;
-use Emagine\Frete\Model\LocalInfo;
 
 interface IFreteBLL
 {
@@ -59,12 +58,6 @@ interface IFreteBLL
      * @return FreteInfo
      */
     public function pegarAbertoPorMotorista($id_motorista, $atualizado = true);
-
-    /**
-     * @param FreteInfo $frete
-     * @return FreteInfo
-     */
-    public function orcar(FreteInfo $frete);
 
     /**
      * @param FreteInfo $frete

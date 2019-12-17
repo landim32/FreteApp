@@ -130,13 +130,13 @@ namespace Frete.Droid
                 {
                     builder.Include(new LatLng(p.Latitude, p.Longitude));
                 }
-                //CameraUpdate cameraUpdate = CameraUpdateFactory.NewLatLngBounds(builder.Build(), 20);
-                CameraUpdate cameraUpdate = CameraUpdateFactory.NewLatLngBounds(builder.Build(), 10);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.NewLatLngBounds(builder.Build(), 20);
                 if (animated)
                 {
                     _map.AnimateCamera(cameraUpdate);
                 }
-                else {
+                else
+                {
                     _map.MoveCamera(cameraUpdate);
                 }
             }

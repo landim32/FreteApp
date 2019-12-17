@@ -1,6 +1,8 @@
 ﻿using Emagine.Base.Model;
 using System;
 
+using Xamarin.Forms;
+
 namespace Emagine.Base.Utils
 {
     public static class GlobalUtils

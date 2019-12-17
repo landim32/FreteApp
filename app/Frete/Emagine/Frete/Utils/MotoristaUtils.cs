@@ -6,6 +6,7 @@ using Emagine.Frete.Factory;
 using Emagine.Frete.Model;
 using Emagine.GPS.Model;
 using Emagine.GPS.Utils;
+using EmagineFrete.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -91,7 +92,7 @@ namespace Emagine.Frete.Utils
                             {
                                 var frete = await regraFrete.pegar(motoristaFrete.IdFrete);
                                 UserDialogs.Instance.HideLoading();
-                                //((RootPage)App.Current.MainPage).PushAsync(new ConfirmaEntregaPage(frete));
+                                ((RootPage)App.Current.MainPage).PushAsync(new ConfirmaEntregaPage(frete));
                             }
                             catch (Exception erro) {
                                 UserDialogs.Instance.HideLoading();

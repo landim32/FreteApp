@@ -42,7 +42,7 @@ namespace Emagine.Frete.BLL
                         Device.BeginInvokeOnMainThread(async () =>
                         {
                             var pedido = ret.Fretes.First();
-                            confirm = await UserDialogs.Instance.ConfirmAsync("Nova entrega no valor de R$ " + pedido.Valor.GetValueOrDefault().ToString("N2") + " disponível para iniciar.", "Entrega", "Ver", "Não quero");
+                            confirm = await UserDialogs.Instance.ConfirmAsync("Nova entrega no valor de R$ " + pedido.Valor.ToString("N2") + " disponível para iniciar.", "Entrega", "Ver", "Não quero");
                             if (confirm)
                             {
                                 ((RootPage)App.Current.MainPage).PushAsync(new Pages.FreteResumoPage(pedido));

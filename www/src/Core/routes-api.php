@@ -1,7 +1,6 @@
 <?php
 namespace Emagine\Frete;
 
-use Emagine\Frete\Model\LocalInfo;
 use Exception;
 use Emagine\Base\EmagineApp;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -197,21 +196,6 @@ $app->group('/api/frete', function () use ($app) {
         $regraFrete = FreteBLLFactory::create();
         $frete = $regraFrete->pegar($args['id_frete']);
         return $response->withJson($frete);
-    });
-
-    $app->put('/orcar', function (Request $request, Response $response, $args) {
-        try {
-            $json = json_decode($request->getBody()->getContents());
-            $regraFrete = FreteBLLFactory::create();
-            $frete = FreteInfo::fromJson($json);
-            $frete = $regraFrete->orcar($frete);
-            return $response->withJson($frete);
-        }
-        catch (Exception $e) {
-            $body = $response->getBody();
-            $body->write($e->getMessage());
-            return $response->withStatus(500);
-        }
     });
 
     $app->put('/inserir', function (Request $request, Response $response, $args) {

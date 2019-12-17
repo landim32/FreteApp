@@ -5,7 +5,7 @@ using Android.OS;
 using Android.Runtime;
 using Plugin.CurrentActivity;
 
-namespace Frete.Droid
+namespace MaisCargas.Droid
 {
 	//You can specify additional application information in this attribute
     [Application]

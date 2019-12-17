@@ -1,4 +1,4 @@
-﻿using Emagine.Banner.BLL;
+﻿using Emagine.Login.BLL;
 using Emagine.Produto.BLL;
 using System;
 using System.Collections.Generic;
@@ -10,14 +10,15 @@ namespace Emagine.Produto.Factory
 {
     public static class ProdutoFactory
     {
-        private static ProdutoBLL _produto;
+        private static ProdutoBLL _Produto;
 
         public static ProdutoBLL create()
         {
-            if (_produto == null) {
-                _produto = new ProdutoBLL();
+            if (_Produto == null)
+            {
+                _Produto = new ProdutoBLL();
             }
-            return _produto;
+            return _Produto;
         }
 
     }

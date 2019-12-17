@@ -5,15 +5,7 @@ namespace Emagine.Frete.Model
     {
         AguardandoPagamento = 1,
         ProcurandoMotorista = 2,
-        AprovandoMotorista = 9,
-        Aguardando = 8,
-        /*
-        PegandoEncomenda = 4,
-        Entregando = 5,
-        Entregue = 6,
-        EntregaConfirmada = 7,
-        Cancelado = 8
-        */
+        //Aguardando = 3,
         PegandoEncomenda = 3,
         Entregando = 4,
         Entregue = 5,

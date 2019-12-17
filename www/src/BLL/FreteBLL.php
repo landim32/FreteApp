@@ -1,7 +1,6 @@
 <?php
 namespace Emagine\Frete\BLL;
 
-use Emagine\Frete\Model\FreteLocalInfo;
 use Exception;
 use phpmailerException;
 use Emagine\Base\EmagineApp;
@@ -283,50 +282,6 @@ class FreteBLL implements IFreteBLL {
         elseif (in_array($frete->getCodSituacao(), $entregue)) {
             $dalFrete->atualizarDataEntrega($frete->getId());
         }
-    }
-
-    /**
-     * @throws Exception
-     * @param FreteInfo $frete
-     * @return FreteInfo
-     */
-    public function orcar(FreteInfo $frete) {
-        $regraRota = new RotaBLL();
-        if ($regraRota->usaCalculoRota()) {
-            $rotas = array();
-            foreach ($frete->listarLocal() as $local) {
-                $rotas[] = $local->getPosicaoStr();
-            }
-            $rota = $regraRota->calcularRota($rotas);
-            if ($rota->getStatus() == "OK") {
-                $frete->setRotaEncontrada(true);
-                $frete->setEnderecoOrigem($rota->getRoutes()[0]->getLegs()[0]->getStartAddress());
-                $frete->setEnderecoDestino($rota->getRoutes()[0]->getLegs()[0]->getEndAddress());
-                $frete->setDistancia($rota->getRoutes()[0]->getLegs()[0]->getDistance()->getValue());
-                $frete->setDistanciaStr($rota->getRoutes()[0]->getLegs()[0]->getDistance()->getText());
-                $frete->setTempo($rota->getRoutes()[0]->getLegs()[0]->getDuration()->getValue());
-                $frete->setTempoStr($rota->getRoutes()[0]->getLegs()[0]->getDuration()->getText());
-                $frete->setPolyline($rota->getRoutes()[0]->getOverviewPolyline()->getPoints());
-                if (!($frete->getPreco() > 0)) {
-                    $preco = $this->calcularValor($frete);
-                    $frete->setPreco($preco);
-                }
-            }
-            else {
-                $frete->setRotaEncontrada(false);
-            }
-        }
-        else {
-            $distancia = $regraRota->calcularDistanciaFrete($frete);
-            $tempo = $regraRota->calcularTempo($distancia);
-
-            $frete->setRotaEncontrada(false);
-            $frete->setDistancia($distancia);
-            $frete->setDistanciaStr($regraRota->distanciaParaTexto($distancia));
-            $frete->setTempo($tempo);
-            $frete->setTempoStr($regraRota->tempoParaTexto($tempo));
-        }
-        return $frete;
     }
 
 	/**

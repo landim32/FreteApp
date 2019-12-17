@@ -11,14 +11,7 @@ namespace Emagine.Endereco.BLL
 {
     public class CepBLL : RestAPIBase
     {
-        private string URL_CEP = "http://emagine.com.br/endereco";
-
-        public CepBLL() {
-            if (!string.IsNullOrEmpty(GlobalUtils.URLAplicacao))
-            {
-                URL_CEP = GlobalUtils.URLAplicacao;
-            }
-        }
+        private const string URL_CEP = "http://emagine.com.br/endereco";
 
         public async Task<EnderecoInfo> pegarPorCep(string cep)
         {

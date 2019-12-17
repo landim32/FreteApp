@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace Emagine.Pedido.Cells
+namespace Emagine.Endereco.Cells
 {
     public class PedidoCell: ViewCell
     {
@@ -129,7 +129,7 @@ namespace Emagine.Pedido.Cells
                 HorizontalTextAlignment = TextAlignment.End,
                 VerticalTextAlignment = TextAlignment.Start
             };
-            _CodigoLabel.SetBinding(Label.TextProperty, new Binding("Id", stringFormat: "Pedido nº {0}"));
+            _CodigoLabel.SetBinding(Label.TextProperty, new Binding("Id", stringFormat: "Pedido #{0}"));
             _MetodoEntregaLabel = new Label
             {
                 HorizontalOptions = LayoutOptions.Fill,

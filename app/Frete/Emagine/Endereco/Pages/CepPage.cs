@@ -121,12 +121,12 @@ namespace Emagine.Endereco.Pages
             {
                 HorizontalOptions = LayoutOptions.Fill,
                 VerticalOptions = LayoutOptions.Start,
-                Style = Estilo.Current[Estilo.BTN_SUCESSO],
+                Style = Estilo.Current[Estilo.BTN_PADRAO],
                 Text = "Já possuo uma conta"
             };
             _loginButton.Clicked += (sender, e) => {
                 AoLogar?.Invoke(this, new EventArgs());
-                //Navigation.PushAsync(LoginUtils.gerarLoginOld());
+                //Navigation.PushAsync(LoginUtils.gerarLogin());
             };
         }
 
@@ -151,8 +151,7 @@ namespace Emagine.Endereco.Pages
             catch (Exception erro)
             {
                 UserDialogs.Instance.HideLoading();
-                //UserDialogs.Instance.Alert(erro.Message, "Erro", "Fechar");
-                await DisplayAlert("Erro", erro.Message, "Fechar");
+                UserDialogs.Instance.Alert(erro.Message, "Erro", "Fechar");
             }
         }
     }
