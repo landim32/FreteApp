@@ -1,20 +1,24 @@
 <?php
 namespace Emagine\Frete;
 
+use Emagine\Frete\BLL\DisponibilidadeBLL;
+use Emagine\Frete\BLL\FreteFaturaBLL;
+use Emagine\Frete\BLLFactory\FreteBLLFactory;
+use Emagine\Frete\Model\DisponibilidadeInfo;
 use Exception;
 use Emagine\Base\EmagineApp;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Emagine\Frete\BLLFactory\FreteBLLFactory;
 use Emagine\Frete\BLLFactory\MotoristaBLLFactory;
+use Emagine\Frete\BLL\FreteBLL;
 use Emagine\Frete\BLL\TipoCarroceriaBLL;
 use Emagine\Frete\BLL\TipoVeiculoBLL;
 use Emagine\Frete\BLL\DisponibilidadeBLL;
-use Emagine\Frete\Model\DisponibilidadeInfo;
 use Emagine\Frete\Model\AceiteEnvioInfo;
 use Emagine\Frete\Model\FreteInfo;
 use Emagine\Frete\Model\MotoristaEnvioInfo;
 use Emagine\Frete\Model\MotoristaInfo;
+use Emagine\Frete\Model\DisponibilidadeInfo;
 
 $app = EmagineApp::getApp();
 

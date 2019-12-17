@@ -1,17 +1,22 @@
 <?php
 namespace Emagine\Frete;
 
-use Exception;
-use Emagine\Base\EmagineApp;
-use Slim\Views\PhpRenderer;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
+use Emagine\Frete\BLL\DisponibilidadeBLL;
+use Emagine\Frete\BLL\FreteFaturaBLL;
+use Emagine\Frete\BLL\RotaBLL;
 use Emagine\Frete\BLLFactory\FreteBLLFactory;
 use Emagine\Frete\BLLFactory\FreteHistoricoBLLFactory;
 use Emagine\Frete\BLLFactory\MotoristaBLLFactory;
-use Emagine\Frete\BLL\RotaBLL;
+use Emagine\Frete\Model\DisponibilidadeInfo;
+use Exception;
+use Emagine\Base\EmagineApp;
+use Emagine\Frete\BLLFactory\MotoristaBLLFactory;
+use Emagine\Frete\BLL\FreteBLL;
 use Emagine\Login\BLL\UsuarioBLL;
 use Emagine\Login\Model\UsuarioInfo;
+use Slim\Views\PhpRenderer;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
 $app = EmagineApp::getApp();
 
@@ -25,6 +30,108 @@ $app->group('/cliente', function () use ($app) {
                 $usuarios[] = $usuario;
             }
         }
+    }
+
+    $args['app'] = $app;
+    $args['usuarios'] = $usuarios;
+
+    /** @var PhpRenderer $rendererMain */
+    $rendererMain = $this->get('view');
+    /** @var PhpRenderer $rendererFrete */
+    $rendererFrete = $this->get('frete');
+    $response = $rendererMain->render($response, 'header.php', $args);
+    $response = $rendererFrete->render($response, 'usuario-lista.php', $args);
+    $response = $rendererMain->render($response, 'footer.php', $args);
+    return $response;
+});
+
+$app->get('/cliente/{slug}', function (Request $request, Response $response, $args) use ($app) {
+    $args['app'] = $app;
+    $bll = new UsuarioBLL();
+    $args['usuario'] = $bll->pegarPorSlug($args["slug"]);
+    /** @var PhpRenderer $rendererMain */
+    $rendererMain = $this->get('view');
+    /** @var PhpRenderer $rendererFrete */
+    $rendererFrete = $this->get('frete');
+    $response = $rendererMain->render($response, 'header.php', $args);
+    $response = $rendererFrete->render($response, 'usuario.php', $args);
+    $response = $rendererMain->render($response, 'footer.php', $args);
+    return $response;
+});
+
+$app->get('/motorista/listar', function (Request $request, Response $response, $args) use ($app) {
+    $args['app'] = $app;
+    $bll = MotoristaBLLFactory::create();
+    $args['motoristas'] = $bll->listar();
+    /** @var PhpRenderer $rendererMain */
+    $rendererMain = $this->get('view');
+    /** @var PhpRenderer $rendererFrete */
+    $rendererFrete = $this->get('frete');
+    $response = $rendererMain->render($response, 'header.php', $args);
+    $response = $rendererFrete->render($response, 'motorista-lista.php', $args);
+    $response = $rendererMain->render($response, 'footer.php', $args);
+    return $response;
+});
+
+$app->get('/motorista/{slug}/situacao/{cod_situacao}', function (Request $request, Response $response, $args) use ($app) {
+    $regraUsuario = new UsuarioBLL();
+    $regraMotorista = MotoristaBLLFactory::create();
+    $usuario = $regraUsuario->pegarPorSlug($args["slug"]);
+    $motorista = $regraMotorista->pegar($usuario->getId());
+
+    $cod_situacao = intval($args["cod_situacao"]);
+    $motorista->setCodSituacao($cod_situacao);
+    $regraMotorista->alterar($motorista);
+
+    $url = $app->getBaseUrl() . "/motorista/" . $usuario->getSlug();
+    return $response->withStatus(302)->withHeader('Location', $url);
+});
+
+$app->get('/motorista/{slug}', function (Request $request, Response $response, $args) use ($app) {
+    $regraUsuario = new UsuarioBLL();
+    $regraMotorista = MotoristaBLLFactory::create();
+    $usuario = $regraUsuario->pegarPorSlug($args["slug"]);
+    $motorista = $regraMotorista->pegar($usuario->getId());
+
+    $args['app'] = $app;
+    $args['motorista'] = $motorista;
+
+    /** @var PhpRenderer $rendererMain */
+    $rendererMain = $this->get('view');
+    /** @var PhpRenderer $rendererFrete */
+    $rendererFrete = $this->get('frete');
+    $response = $rendererMain->render($response, 'header.php', $args);
+    $response = $rendererFrete->render($response, 'motorista.php', $args);
+    $response = $rendererMain->render($response, 'footer.php', $args);
+    return $response;
+});
+
+$app->get('/frete/listar', function (Request $request, Response $response, $args) use ($app) {
+    $args['app'] = $app;
+    $bll = new FreteBLL();
+    $args['fretes'] = $bll->listar();
+    /** @var PhpRenderer $rendererMain */
+    $rendererMain = $this->get('view');
+    /** @var PhpRenderer $rendererFrete */
+    $rendererFrete = $this->get('frete');
+    $response = $rendererMain->render($response, 'header.php', $args);
+    $response = $rendererFrete->render($response, 'frete-lista.php', $args);
+    $response = $rendererMain->render($response, 'footer.php', $args);
+    return $response;
+});
+
+$app->get('/frete/{id_frete}', function (Request $request, Response $response, $args) use ($app) {
+    $args['app'] = $app;
+    $bll = new FreteBLL();
+    $args['frete'] = $bll->pegar($args['id_frete']);
+    /** @var PhpRenderer $rendererMain */
+    $rendererMain = $this->get('view');
+    /** @var PhpRenderer $rendererFrete */
+    $rendererFrete = $this->get('frete');
+    $response = $rendererMain->render($response, 'header.php', $args);
+    $response = $rendererFrete->render($response, 'frete.php', $args);
+    $response = $rendererMain->render($response, 'footer.php', $args);
+    return $response;
 
         $args['app'] = $app;
         $args['usuarios'] = $usuarios;
@@ -214,5 +321,4 @@ $app->group('/frete', function () use ($app) {
         $response = $rendererMain->render($response, 'footer.php', $args);
         return $response;
     });
-
 });

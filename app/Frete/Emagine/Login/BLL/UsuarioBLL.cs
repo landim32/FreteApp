@@ -81,6 +81,7 @@ namespace Emagine.Login.BLL
         {
             _usuario = usuario;
             App.Current.Properties["usuario"] = JsonConvert.SerializeObject(_usuario);
+            //App.Current.Properties["usuario"] = _usuario;
             App.Current.SavePropertiesAsync();
         }
 

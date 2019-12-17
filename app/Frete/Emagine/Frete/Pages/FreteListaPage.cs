@@ -10,6 +10,7 @@ using Emagine.Frete.Factory;
 using Emagine.Frete.Model;
 using Emagine.Frete.Pages;
 using FormsPlugin.Iconize;
+using SuaveControls.Views;
 using Xamarin.Forms;
 
 namespace Emagine.Frete.Pages

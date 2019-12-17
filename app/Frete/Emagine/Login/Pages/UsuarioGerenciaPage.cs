@@ -73,8 +73,7 @@ namespace Emagine.Login.Pages
         protected async override void OnAppearing()
         {
             base.OnAppearing();
-            if (_carregado)
-            {
+            if (_carregado) {
                 return;
             }
             UserDialogs.Instance.ShowLoading("Carregando...");
@@ -92,8 +91,7 @@ namespace Emagine.Login.Pages
                 regraUsuario.gravarAtual(usuario);
                 _usuarioPage.Usuario = usuario;
                 var enderecos = new List<EnderecoInfo>();
-                foreach (var endereco in usuario.Enderecos)
-                {
+                foreach (var endereco in usuario.Enderecos) {
                     enderecos.Add(endereco);
                 }
                 _enderecoListaPage.Enderecos = enderecos;
@@ -101,6 +99,7 @@ namespace Emagine.Login.Pages
                 var regraCartao = PagamentoCartaoFactory.create();
                 var cartoes = await regraCartao.listar(usuario.Id);
                 _cartaoListaPage.Cartoes = cartoes;
+                
                 _carregado = true;
                 UserDialogs.Instance.HideLoading();
             }

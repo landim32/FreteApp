@@ -9,7 +9,6 @@ using Emagine.Base.Estilo;
 using Emagine.Frete.Model;
 using Emagine.Login.Factory;
 using Emagine.Frete.Factory;
-using Emagine.Pagamento.Model;
 
 namespace Emagine.Frete.Cells
 {
@@ -259,74 +258,6 @@ namespace Emagine.Frete.Cells
                     }
                 });
             }
-
-            if (frete != null && frete.IdPagamento > 0 && frete.Pagamento != null)
-            {
-                var texto = string.Empty;
-                var cor = Estilo.Current.PrimaryColor;
-                switch (frete.Pagamento.Tipo) {
-                    case TipoPagamentoEnum.Boleto:
-                        texto = (motorista != null) ? "Receber por Boleto Bancário" : "Pagar com Boleto Bancário";
-                        cor = Estilo.Current.DangerColor;
-                        break;
-                    case TipoPagamentoEnum.CartaoOffline:
-                        texto = (motorista != null) ? "Receber por máquina de cartão" : "Pagar com máquina de cartão";
-                        cor = Estilo.Current.DangerColor;
-                        break;
-                    case TipoPagamentoEnum.CreditoOnline:
-                        if (frete.Pagamento.Situacao == SituacaoPagamentoEnum.Pago)
-                        {
-                            texto = "Pago com cartão de crédito";
-                            cor = Estilo.Current.SuccessColor;
-                        }
-                        else {
-                            texto = (motorista != null) ? "Receber por cartão de crédito" : "Pagar com cartão de crédito";
-                            cor = Estilo.Current.DangerColor;
-                        }
-                        break;
-                    case TipoPagamentoEnum.DebitoOnline:
-                        if (frete.Pagamento.Situacao == SituacaoPagamentoEnum.Pago)
-                        {
-                            texto = "Pago com cartão de débito";
-                            cor = Estilo.Current.SuccessColor;
-                        }
-                        else
-                        {
-                            texto = (motorista != null) ? "Receber por cartão de débito" : "Pagar com cartão de débito";
-                            cor = Estilo.Current.DangerColor;
-                        }
-                        break;
-                    case TipoPagamentoEnum.Dinheiro:
-                        texto = (motorista != null) ? "Receber por dinheiro" : "Pagar com dinheiro";
-                        cor = Estilo.Current.DangerColor;
-                        break;
-                }
-
-                _mainLayout.Children.Add(new StackLayout
-                {
-                    Orientation = StackOrientation.Horizontal,
-                    HorizontalOptions = LayoutOptions.Fill,
-                    VerticalOptions = LayoutOptions.Start,
-                    Spacing = 5,
-                    Children = {
-                        new IconImage{
-                            HorizontalOptions = LayoutOptions.Start,
-                            VerticalOptions = LayoutOptions.Center,
-                            Icon = "fa-dollar",
-                            IconSize = 16,
-                            WidthRequest = 20,
-                            IconColor = Estilo.Current.PrimaryColor
-                        },
-                        new Label {
-                            HorizontalOptions = LayoutOptions.Start,
-                            VerticalOptions = LayoutOptions.Start,
-                            FontAttributes = FontAttributes.Bold,
-                            TextColor = cor,
-                            Text = texto
-                        }
-                    }
-                });
-            }
         }
 
         private void inicializarComponente()
@@ -350,7 +281,7 @@ namespace Emagine.Frete.Cells
                 HorizontalOptions = LayoutOptions.Fill,
                 VerticalOptions = LayoutOptions.CenterAndExpand,
             };
-            _OrigemLabel.SetBinding(Label.TextProperty, new Binding("EnderecoDestino"));
+            _OrigemLabel.SetBinding(Label.TextProperty, new Binding("EnderecoChegada"));
             _PesoLabel = new Label
             {
                 HorizontalOptions = LayoutOptions.Start,

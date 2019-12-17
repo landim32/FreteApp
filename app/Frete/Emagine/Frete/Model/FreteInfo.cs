@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Emagine.Login.Model;
-using Emagine.Pagamento.Model;
 using Newtonsoft.Json;
 using Xamarin.Forms;
 
@@ -23,10 +22,7 @@ namespace Emagine.Frete.Model
         public int IdUsuario { get; set; }
 
         [JsonProperty("id_pagamento")]
-        public int? IdPagamento { get; set; }
-
-        [JsonProperty("pagamento")]
-        public PagamentoInfo Pagamento { get; set; }
+        public long? IdPagamento { get; set; }
 
         [JsonProperty("usuario")]
         public UsuarioInfo Usuario { get; set; }

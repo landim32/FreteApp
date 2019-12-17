@@ -1,7 +1,10 @@
 <?php
 namespace Emagine\Frete\Test;
 
+require "config.php";
+
 use Exception;
+use phpmailerException;
 use joshtronic\LoremIpsum;
 use PHPUnit\Framework\TestCase;
 use Emagine\Login\BLL\UsuarioBLL;

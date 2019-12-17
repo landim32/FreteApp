@@ -4,14 +4,11 @@ using Emagine.Base.Controls;
 using Emagine.Base.Estilo;
 using Emagine.Base.Model;
 using Emagine.Base.Utils;
-using Emagine.Frete.BLL;
 using Emagine.Frete.Factory;
 using Emagine.Frete.Model;
-using Emagine.Login.BLL;
+using Emagine.Frete.Pages;
 using Emagine.Login.Factory;
-using EmagineFrete.Controls;
-using EmagineFrete.Model;
-using EmagineFrete.Utils;
+using Emagine.Login.Pages;
 using Xamarin.Forms;
 
 namespace EmagineFrete.Pages
@@ -32,7 +29,8 @@ namespace EmagineFrete.Pages
 
         public PrincipalPage()
         {
-            var usuario = new UsuarioBLL().pegarAtual();
+            var regraUsuario = UsuarioFactory.create();
+            var usuario = regraUsuario.pegarAtual();
             Title = "Olá " + usuario.Nome;
 
             inicializarComponente();
@@ -42,6 +40,19 @@ namespace EmagineFrete.Pages
                 RowSpacing = 10,
                 ColumnSpacing = 10
             };
+
+            _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            _mainLayout.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            _mainLayout.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+            _mainLayout.Children.Add(_EnviarProdutoButton, 0, 0);
+            _mainLayout.Children.Add(_RastrearMercadoriaButton, 1, 0);
+            _mainLayout.Children.Add(_FaleConoscoButton, 0, 1);
+            _mainLayout.Children.Add(_MeuPedidoButton, 1, 1);
+            _mainLayout.Children.Add(_SobreAplicativoButton, 0, 2);
+            _mainLayout.Children.Add(_ConfiguracaoButton, 1, 2);
             //adicionarBotaoMotorista();
 
             Content = _mainLayout;
@@ -57,64 +68,42 @@ namespace EmagineFrete.Pages
                 var regraMotorista = MotoristaFactory.create();
                 var usuario = regraUsuario.pegarAtual();
                 var motorista = regraMotorista.pegarAtual();
-                if (motorista != null)
+                if (motorista == null)
                 {
-                    //var mn = new Menu();
-                    //mn.setMenuMotorista();
-                    //RootPage.root.Master = (ContentPage)mn;
-                    //regraMotorista.gravarAtual(motorista);
-
-                    _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-                    _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-                    _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-                    _mainLayout.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                    _mainLayout.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-
-                    _mainLayout.Children.Add(_EnviarProdutoButton, 0, 0);
-                    _mainLayout.Children.Add(_RastrearMercadoriaButton, 1, 0);
-                    _mainLayout.Children.Add(_FaleConoscoButton, 0, 1);
-                    _mainLayout.Children.Add(_MeuPedidoButton, 1, 1);
-                    _mainLayout.Children.Add(_SobreAplicativoButton, 0, 2);
-                    _mainLayout.Children.Add(_ConfiguracaoButton, 1, 2);
-
-                    if (motorista.Situacao != MotoristaSituacaoEnum.Ativo)
+                    try
                     {
-                        adicionarSituacao(motorista.Situacao);
+                        UserDialogs.Instance.ShowLoading("carregando...");
+                        motorista = await regraMotorista.pegar(usuario.Id);
+                        if (motorista != null)
+                        {
+                            regraMotorista.gravarAtual(motorista);
+                            if (motorista.Situacao != MotoristaSituacaoEnum.Ativo) {
+                                adicionarSituacao(motorista.Situacao);
+                            }
+                        }
+                        /*else
+                        {
+                            adicionarBotaoMotorista();
+                        }*/
+                        UserDialogs.Instance.HideLoading();
                     }
-                }
-                else
-                {
-                    //var mn = new Menu();
-                    //mn.setMenuUsuario();
-                    //RootPage.root.Master = (ContentPage)mn;
-                    _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-                    _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-                    _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-                    _mainLayout.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                    _mainLayout.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-
-                    _mainLayout.Children.Add(_EnviarProdutoButton, 0, 0);
-                    _mainLayout.Children.Add(_RastrearMercadoriaButton, 1, 0);
-                    _mainLayout.Children.Add(_FaleConoscoButton, 0, 1);
-                    _mainLayout.Children.Add(_MeuPedidoButton, 1, 1);
-                    _mainLayout.Children.Add(_SobreAplicativoButton, 0, 2);
-                    _mainLayout.Children.Add(_ConfiguracaoButton, 1, 2);
-
-                    adicionarBotaoMotorista();
+                    catch (Exception e)
+                    {
+                        UserDialogs.Instance.HideLoading();
+                        UserDialogs.Instance.ShowError(e.Message, 8000);
+                    }
                 }
                 _motoristaVerificado = true;
             }
         }
 
         private void inicializarComponente() {
-            if (GlobalUtils.getAplicacaoAtual() == AplicacaoEnum.APLICACAO01)
+            if(GlobalUtils.getAplicacaoAtual() == AplicacaoEnum.APLICACAO01)
                 _EnviarProdutoButton = new PrincipalButton(ImageSource.FromFile("btnEnviarProduto.png"));
             else
                 _EnviarProdutoButton = new PrincipalButton("fa-car", "Enviar\nProduto");
             _EnviarProdutoButton.AoClicar += (sender, e) => {
-                Navigation.PushAsync(new ProdutoPage() {
-                    Title = "Enviar Produto"
-                });
+                Navigation.PushAsync(new FreteForm1Page());
             };
 
             if (GlobalUtils.getAplicacaoAtual() == AplicacaoEnum.APLICACAO01)
@@ -122,9 +111,7 @@ namespace EmagineFrete.Pages
             else
                 _RastrearMercadoriaButton = new PrincipalButton("fa-search", "Rastrear\nMercadoria");
             _RastrearMercadoriaButton.AoClicar += (sender, e) => {
-                Navigation.PushAsync(new FreteListaPage(false) {
-                    Title = "Rastrear Mercadoria"
-                });
+                Navigation.PushAsync(new FreteListaPage(false));
             };
 
             if (GlobalUtils.getAplicacaoAtual() == AplicacaoEnum.APLICACAO01)
@@ -140,9 +127,7 @@ namespace EmagineFrete.Pages
             else
                 _MeuPedidoButton = new PrincipalButton("fa-gift", "Meus\nPedidos");
             _MeuPedidoButton.AoClicar += (sender, e) => {
-                Navigation.PushAsync(new FreteListaPage(true) {
-                    Title = "Meus Pedidos"
-                });
+                Navigation.PushAsync(new FreteListaPage(true));
             };
 
             if (GlobalUtils.getAplicacaoAtual() == AplicacaoEnum.APLICACAO01)
@@ -150,9 +135,7 @@ namespace EmagineFrete.Pages
             else
                 _SobreAplicativoButton = new PrincipalButton("fa-exclamation-circle", "Sobre o\nAplicativo");
             _SobreAplicativoButton.AoClicar += (sender, e) => {
-                Navigation.PushAsync(new SobrePage() {
-                    Title = "Sobre o Aplicativo"
-                });
+                Navigation.PushAsync(new SobrePage());
             };
 
             if (GlobalUtils.getAplicacaoAtual() == AplicacaoEnum.APLICACAO01)
@@ -160,8 +143,8 @@ namespace EmagineFrete.Pages
             else
                 _ConfiguracaoButton = new PrincipalButton("fa-cogs", "Minhas\nConfigurações");
             _ConfiguracaoButton.AoClicar += (sender, e) => {
-                //Navigation.PushAsync(new ConfiguracaoPage());
-            };   
+                Navigation.PushAsync(new ConfiguracaoPage());
+            };
         }
 
         private void adicionarBotaoMotorista() {
@@ -174,7 +157,8 @@ namespace EmagineFrete.Pages
                 HeightRequest = 50
             };
             _MotoristaButton.Clicked += (sender, e) => {
-                Navigation.PushAsync(new CadastroPage(CadastroTipoEnum.ApenasFornecedor));
+                // Rodrigo Landim - 16/03
+                //Navigation.PushAsync(new CadastroPage(CadastroTipoEnum.ApenasFornecedor));
             };
 
             _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(50, GridUnitType.Absolute) });

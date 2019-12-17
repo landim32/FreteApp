@@ -45,12 +45,6 @@
     <JavaMaximumHeapSize>1G</JavaMaximumHeapSize>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Plugin.LocalNotifications, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xam.Plugins.Notifier.2.1.0\lib\MonoAndroid10\Plugin.LocalNotifications.dll</HintPath>
-    </Reference>
-    <Reference Include="Plugin.LocalNotifications.Abstractions, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xam.Plugins.Notifier.2.1.0\lib\MonoAndroid10\Plugin.LocalNotifications.Abstractions.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -213,14 +207,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ImagemAndroid.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MainApplication.cs" />
     <Compile Include="PermissaoAndroid.cs" />
     <Compile Include="CustomMapRenderer.cs" />
-    <Compile Include="VersionAndroid.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -245,12 +237,40 @@
     <AndroidResource Include="Resources\drawable\btnMeuPedido.png" />
     <AndroidResource Include="Resources\drawable\btnRastrear.png" />
     <AndroidResource Include="Resources\drawable\btnSobre.png" />
+    <AndroidResource Include="Resources\drawable\Veiculo_01.png" />
+    <AndroidResource Include="Resources\drawable\Veiculo_02.png" />
+    <AndroidResource Include="Resources\drawable\Veiculo_03.png" />
+    <AndroidResource Include="Resources\drawable\Veiculo_04.png" />
+    <AndroidResource Include="Resources\drawable\Veiculo_05.png" />
+    <AndroidResource Include="Resources\drawable\Veiculo_06.png" />
+    <AndroidResource Include="Resources\drawable\Veiculo_07.png" />
+    <AndroidResource Include="Resources\drawable\Veiculo_08.png" />
+    <AndroidResource Include="Resources\drawable\Veiculo_09.png" />
+    <AndroidResource Include="Resources\drawable\Carroceria_01.png" />
+    <AndroidResource Include="Resources\drawable\Carroceria_02.png" />
+    <AndroidResource Include="Resources\drawable\Carroceria_03.png" />
+    <AndroidResource Include="Resources\drawable\Carroceria_04.png" />
+    <AndroidResource Include="Resources\drawable\Carroceria_05.png" />
+    <AndroidResource Include="Resources\drawable\Carroceria_06.png" />
+    <AndroidResource Include="Resources\drawable\Carroceria_07.png" />
+    <AndroidResource Include="Resources\drawable\Carroceria_08.png" />
+    <AndroidResource Include="Resources\drawable\Carroceria_09.png" />
+    <AndroidResource Include="Resources\drawable\Carroceria_10.png" />
+    <AndroidResource Include="Resources\drawable\Carroceria_11.png" />
+    <AndroidResource Include="Resources\drawable\Carroceria_12.png" />
+    <AndroidResource Include="Resources\drawable\Carroceria_13.png" />
+    <AndroidResource Include="Resources\drawable\Carroceria_14.png" />
+    <AndroidResource Include="Resources\drawable\Carroceria_15.png" />
+    <AndroidResource Include="Resources\drawable\P.png" />
     <AndroidResource Include="Resources\drawable\filtro.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable-hdpi\" />
     <Folder Include="Resources\drawable-xhdpi\" />
     <Folder Include="Resources\drawable-xxhdpi\" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Html\Contrato.html" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Frete\Frete.csproj">

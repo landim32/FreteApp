@@ -22,7 +22,7 @@ using Xfx;
 
 namespace Frete.Droid
 {
-    [Activity(Label = "Frete Simples", Icon = "@drawable/icon", Theme = "@style/MyTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "Mais Cargas", Icon = "@drawable/icon", Theme = "@style/MyTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle bundle)
@@ -35,14 +35,17 @@ namespace Frete.Droid
 
             UserDialogs.Init(this);
             Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.FontAwesomeModule());
-
-
             XfxControls.Init();
+
             global::Xamarin.Forms.Forms.Init(this, bundle);
             Xamarin.FormsMaps.Init(this, bundle);
 
-
             FormsPlugin.Iconize.Droid.IconControls.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs);
+
+            //TemaUtils.CorPrincipal = Xamarin.Forms.Color.FromHex("#ff6100");
+            //TemaUtils.CorSecundaria = Xamarin.Forms.Color.FromHex("#ce3400");
+            GlobalUtils.setAplicacaoAtual(AplicacaoEnum.APLICACAO03);
+            //GlobalUtils.setURLAplicacao("http://emagine.com.br/nvoid");
 
             LoadApplication(new App());
         }

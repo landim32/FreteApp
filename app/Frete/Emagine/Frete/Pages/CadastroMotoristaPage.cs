@@ -21,13 +21,18 @@ namespace Emagine.Frete.Pages
         protected DropDownList _TipoVeiculoEntry;
         protected DropDownList _CarroceriaEntry;
         protected XfxEntry _VeiculoEntry;
-        private XfxEntry _CNHEntry;
         protected XfxEntry _PlacaEntry;
         protected XfxEntry _ANTTEntry;
         protected Button _CadastroButton;
 
         private UsuarioInfo _usuario;
 
+        private DropDownList _TipoVeiculoEntry;
+        private DropDownList _CarroceriaEntry;
+        private XfxEntry _CNHEntry;
+        private XfxEntry _PlacaEntry;
+        private XfxEntry _ANTTEntry;
+        private Button _CadastroButton;
 
         public UsuarioInfo Usuario {
             get {
@@ -214,21 +219,17 @@ namespace Emagine.Frete.Pages
                 TipoVeiculoInfo tipo = (TipoVeiculoInfo)_TipoVeiculoEntry.Value;
                 TipoCarroceriaInfo carroceria = (TipoCarroceriaInfo)_CarroceriaEntry.Value;
 
-                bool incluir = false;
-                var regraMotorista = MotoristaFactory.create();
-                var motorista = await regraMotorista.pegar(_usuario.Id);
-                if (motorista == null) {
-                    motorista = new MotoristaInfo();
-                    motorista.Id = _usuario.Id;
-                    incluir = true;
-                }
-                motorista.IdTipo = tipo.Id;
-                motorista.CNH = _CNHEntry.Text;
-                motorista.Placa = _PlacaEntry.Text;
-                motorista.Veiculo = _VeiculoEntry.Text;
-                motorista.ANTT = _ANTTEntry.Text;
-                motorista.Situacao = MotoristaSituacaoEnum.Ativo;
-                if (carroceria != null) {
+                var motorista = new MotoristaInfo
+                {
+                    Id = _usuario.Id,
+                    IdTipo = tipo.Id,
+                    Placa = _PlacaEntry.Text,
+                    Veiculo = _VeiculoEntry.Text,
+                    ANTT = _ANTTEntry.Text,
+                    Situacao = MotoristaSituacaoEnum.Ativo
+                };
+                if (carroceria != null)
+                {
                     motorista.IdCarroceria = carroceria.Id;
                 }
 
@@ -236,8 +237,7 @@ namespace Emagine.Frete.Pages
                 {
                     await regraUsuario.alterar(_usuario);
 
-                    motorista.Usuario = _usuario;
-                    /*
+                    var regraMotorista = MotoristaFactory.create();
                     var motorista = new MotoristaInfo
                     {
                         Id = _usuario.Id,
@@ -251,13 +251,12 @@ namespace Emagine.Frete.Pages
                     if (carroceria != null) {
                         motorista.IdCarroceria = carroceria.Id;
                     }
-                    */
-                    if (incluir)
+                    if (motorista.Id > 0)
                     {
-                        await regraMotorista.inserir(motorista);
+                        await regraMotorista.alterar(motorista);
                     }
                     else {
-                        await regraMotorista.alterar(motorista);
+                        motorista.Id = await regraMotorista.inserir(motorista);
                     }
                     motorista = await regraMotorista.pegar(motorista.Id);
                     /*
@@ -273,11 +272,11 @@ namespace Emagine.Frete.Pages
                     */
                     //var usuarioCadastrado = await regraUsuario.pegar(_usuario.Id);
                     //motorista = await regraMotorista.pegar(_usuario.Id);
-                    //var regraUsuario = UsuarioFactory.create();
+                    var regraUsuario = UsuarioFactory.create();
                     regraUsuario.gravarAtual(motorista.Usuario);
                     regraMotorista.gravarAtual(motorista);
                     UserDialogs.Instance.HideLoading();
-                    AoCompletar?.Invoke(this, motorista);
+                    AoCompletar?.Invoke(this, motoristaCadastrado);
                 }
                 else {
                     //UserDialogs.Instance.HideLoading();

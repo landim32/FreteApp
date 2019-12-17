@@ -69,13 +69,14 @@ class FreteLocalBLL {
 		if (!($local->getOrdem() > 0)) {
 			throw new Exception('Informe a ordem.');
 		}
-        $local->setCep(cortarTexto($local->getCep(), 10));
-        $local->setLogradouro(cortarTexto($local->getLogradouro(), 60));
-        $local->setComplemento(cortarTexto($local->getComplemento(), 40));
-        $local->setNumero(cortarTexto($local->getNumero(), 20));
-        $local->setBairro(cortarTexto($local->getBairro(), 50));
-        $local->setCidade(cortarTexto($local->getCidade(), 50));
-        $local->setUf(strtoupper(cortarTexto($local->getUf(), 2)));
+		/*
+		if (isNullOrEmpty($local->getLatitude())) {
+			throw new Exception('Preencha a latitude.');
+		}
+        if (isNullOrEmpty($local->getLongitude())) {
+			throw new Exception('Preencha a longitude.');
+		}
+		*/
 	}
 
 	/**

@@ -14,7 +14,6 @@ use JsonSerializable;
 class MotoristaEnvioInfo implements JsonSerializable
 {
     private $id_motorista;
-    private $id_frete;
     private $latitude;
     private $longitude;
     private $cod_disponibilidade;
@@ -31,20 +30,6 @@ class MotoristaEnvioInfo implements JsonSerializable
      */
     public function setIdMotorista($value) {
         $this->id_motorista = $value;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getIdFrete() {
-        return $this->id_frete;
-    }
-
-    /**
-     * @param int|null $value
-     */
-    public function setIdFrete($value) {
-        $this->id_frete = $value;
     }
 
     /**
@@ -107,7 +92,6 @@ class MotoristaEnvioInfo implements JsonSerializable
     {
         $value = new stdClass();
         $value->id_motorista = $this->getIdMotorista();
-        $value->id_frete = $this->getIdFrete();
         $value->latitude = $this->getLatitude();
         $value->longitude = $this->getLongitude();
         $value->cod_disponibilidade = $this->getCodDisponibilidade();
@@ -117,7 +101,6 @@ class MotoristaEnvioInfo implements JsonSerializable
     public static function fromJson($value) {
         $envio = new MotoristaEnvioInfo();
         $envio->setIdMotorista($value->id_motorista);
-        $envio->setIdFrete($value->id_frete);
         $envio->setLatitude($value->latitude);
         $envio->setLongitude($value->longitude);
         $envio->setCodDisponibilidade($value->cod_disponibilidade);

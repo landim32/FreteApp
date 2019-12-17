@@ -45,7 +45,7 @@ namespace Frete.Pages
             {
                 var regraUsuario = UsuarioFactory.create();
                 await regraUsuario.limparAtual();
-                App.Current.MainPage = new NavigationPage(new CustomInicialPage());
+                App.Current.MainPage = new NavigationPage(new InicialPage());
             };
         }
 

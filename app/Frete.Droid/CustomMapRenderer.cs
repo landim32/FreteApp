@@ -8,25 +8,42 @@ using Frete.Droid;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 using Xamarin.Forms.Maps.Android;
-using Xamarin.Forms.Platform.Android;
 
 [assembly: ExportRenderer(typeof(CustomMap), typeof(CustomMapRenderer))]
 namespace Frete.Droid
 {
     public class CustomMapRenderer : MapRenderer
     {
-        private bool _inicializouMapa = false;
-        private IList<Position> _polylinePosicoes;
+        List<Position> routeCoordinates;
         private GoogleMap _map;
-        private CustomMap _mapaForm;
-        private Polyline _polyline;
+        Polyline poli; 
 
         public CustomMapRenderer(Context context) : base(context)
         {
-            _inicializouMapa = false;
         }
 
-        protected override void OnElementChanged(ElementChangedEventArgs<Map> e)
+        public void resetPolyline(List<Position> newRoute)
+        {                           
+            if(poli != null){
+                poli.Remove();
+                poli.Dispose();
+                var polylineOptions = new PolylineOptions();
+                polylineOptions.InvokeColor(0x66FF0000);
+                while (polylineOptions.Points != null && polylineOptions.Points.Count > 0)
+                {
+                    polylineOptions.Points.RemoveAt(0);
+                }
+                if(newRoute != null){
+                    foreach (var position in newRoute)
+                    {
+                        polylineOptions.Add(new LatLng(position.Latitude, position.Longitude));
+                    }
+                    poli = NativeMap.AddPolyline(polylineOptions);   
+                }
+            }
+        }
+
+        protected override void OnElementChanged(Xamarin.Forms.Platform.Android.ElementChangedEventArgs<Map> e)
         {
             base.OnElementChanged(e);
 
@@ -36,27 +53,18 @@ namespace Frete.Droid
             }
 
             if (_map != null)
-            {
-                _map.MapClick -= googleMapClick;
-            }
+                _map.MapClick -= googleMap_MapClick;
 
             if (e.NewElement != null)
             {
-                _mapaForm = (CustomMap)e.NewElement;
-                _polylinePosicoes = _mapaForm.Polyline;
-                _mapaForm.aoResetarPolyline += (sender, polyline) =>
-                {
-                    resetarPolyline(polyline);
-                };
-                _mapaForm.aoZoomPolyline += (sender, polyline, animated) =>
-                {
-                    zoomPolyline(polyline, animated);
-                };
+                var formsMap = (CustomMap)e.NewElement;
+                routeCoordinates = formsMap.RouteCoordinates;
+                formsMap.resetPolyline += (sender, eventArg) => { resetPolyline(eventArg); };
                 Control.GetMapAsync(this);
             }
         }
 
-        private void googleMapClick(object sender, GoogleMap.MapClickEventArgs e)
+        private void googleMap_MapClick(object sender, GoogleMap.MapClickEventArgs e)
         {
             ((CustomMap)Element).OnTap(new Position(e.Point.Latitude, e.Point.Longitude));
         }
@@ -64,82 +72,21 @@ namespace Frete.Droid
         protected override void OnMapReady(GoogleMap map)
         {
             base.OnMapReady(map);
+
             _map = map;
-            _map.UiSettings.MyLocationButtonEnabled = false;
-            _map.UiSettings.ZoomControlsEnabled = false;
-            _map.UiSettings.ZoomGesturesEnabled = true;
-            _map.UiSettings.RotateGesturesEnabled = true;
 
             if (_map != null)
-            {
-                _map.MapClick += googleMapClick;
-            }
-            if (NativeMap != null)
-            {
-                var polylineOptions = new PolylineOptions();
-                polylineOptions.InvokeColor(0x66FF0000);
-                foreach (var position in _polylinePosicoes)
-                {
-                    polylineOptions.Add(new LatLng(position.Latitude, position.Longitude));
-                }
-                _polyline = NativeMap.AddPolyline(polylineOptions);
-            }
-            if (_mapaForm != null)
-            {
-                if (!_inicializouMapa)
-                {
-                    _mapaForm.inicializarMapa();
-                    _inicializouMapa = true;
-                }
-            }
-        }
+                _map.MapClick += googleMap_MapClick;
 
-        private void resetarPolyline(IList<Position> novaRota)
-        {
-            if (_polyline != null)
-            {
-                _polyline.Remove();
-                _polyline.Dispose();
-                _polyline = null;
-            }
-            if (NativeMap != null)
-            {
-                var polylineOptions = new PolylineOptions();
-                polylineOptions.InvokeColor(0x66FF0000);
-                while (polylineOptions.Points != null && polylineOptions.Points.Count > 0)
-                {
-                    polylineOptions.Points.RemoveAt(0);
-                }
-                if (novaRota != null)
-                {
-                    foreach (var position in novaRota)
-                    {
-                        polylineOptions.Add(new LatLng(position.Latitude, position.Longitude));
-                    }
-                    _polyline = NativeMap.AddPolyline(polylineOptions);
-                }
-            }
-        }
+            var polylineOptions = new PolylineOptions();
+            polylineOptions.InvokeColor(0x66FF0000);
 
-        private void zoomPolyline(IList<Position> polyline, bool animated = false)
-        {
-            if (polyline.Count > 0)
+            foreach (var position in routeCoordinates)
             {
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                foreach (var p in polyline)
-                {
-                    builder.Include(new LatLng(p.Latitude, p.Longitude));
-                }
-                CameraUpdate cameraUpdate = CameraUpdateFactory.NewLatLngBounds(builder.Build(), 20);
-                if (animated)
-                {
-                    _map.AnimateCamera(cameraUpdate);
-                }
-                else
-                {
-                    _map.MoveCamera(cameraUpdate);
-                }
+                polylineOptions.Add(new LatLng(position.Latitude, position.Longitude));
             }
+
+            poli = NativeMap.AddPolyline(polylineOptions);
         }
     }
 }

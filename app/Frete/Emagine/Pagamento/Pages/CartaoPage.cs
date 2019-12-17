@@ -1,6 +1,5 @@
 ﻿using Acr.UserDialogs;
 using Emagine.Base.Estilo;
-using Emagine.Base.Pages;
 using Emagine.Base.Utils;
 using Emagine.Login.Factory;
 using Emagine.Pagamento.Controls;
@@ -316,12 +315,8 @@ namespace Emagine.Pagamento.Pages
                 if (retorno.Situacao == SituacaoPagamentoEnum.Pago || retorno.Situacao == SituacaoPagamentoEnum.AguardandoPagamento) {
                     var pagamento = await regraPagamento.pegar(retorno.IdPagamento);
                     if (retorno.Situacao == SituacaoPagamentoEnum.Pago) {
-                        var nomeApp = "App";
-                        if (App.Current.MainPage is RootPage) {
-                            nomeApp = ((RootPage)App.Current.MainPage).NomeApp;
-                        }
                         var mensagem = "Foram debitados R$ {0} do seu cartão de crédito.";
-                        CrossLocalNotifications.Current.Show(nomeApp, string.Format(mensagem, pagamento.ValorTotalStr));
+                        CrossLocalNotifications.Current.Show("Easy Barcos", string.Format(mensagem, pagamento.ValorTotalStr));
                     }
                     UserDialogs.Instance.HideLoading();
                     AoEfetuarPagamento?.Invoke(this, pagamento);

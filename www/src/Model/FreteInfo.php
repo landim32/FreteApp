@@ -2,7 +2,6 @@
 
 namespace Emagine\Frete\Model;
 
-use Emagine\Pagamento\Factory\PagamentoFactory;
 use stdClass;
 use Exception;
 use JsonSerializable;
@@ -158,7 +157,7 @@ class FreteInfo implements JsonSerializable {
      */
     public function getPagamento() {
         if (is_null($this->pagamento) && $this->getIdPagamento() > 0) {
-            $bll = PagamentoFactory::create();
+            $bll = new PagamentoCieloBLL();
             $this->pagamento = $bll->pegar($this->getIdPagamento());
         }
         return $this->pagamento;
@@ -805,14 +804,7 @@ class FreteInfo implements JsonSerializable {
 		$value->usuario = $this->getUsuario();
 		$value->id_motorista = $this->getIdMotorista();
 		$value->motorista = $this->getMotorista();
-		if ($this->getIdPagamento() > 0) {
-            $value->id_pagamento = $this->getIdPagamento();
-            $value->pagamento = $this->getPagamento();
-        }
-        else {
-            $value->id_pagamento = null;
-            $value->pagamento = null;
-        }
+		$value->id_pagamento = $this->getIdPagamento();
 		$value->pagamento = $this->getPagamento();
 		$value->data_inclusao = $this->getDataInclusao();
         $value->data_inclusao_str = $this->getDataInclusaoStr();

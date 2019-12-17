@@ -145,10 +145,9 @@ class FreteDAL implements IFreteDAL {
     /**
      * @throws Exception
      * @param int $id_motorista
-     * @param int $id_frete
      * @return FreteInfo
      */
-    public function pegarAbertoPorMotorista($id_motorista, $id_frete = 0) {
+    public function pegarAbertoPorMotorista($id_motorista) {
         $situacoes = array(
             FreteInfo::PEGANDO_ENCOMENDA,
             FreteInfo::ENTREGANDO,
@@ -157,16 +156,10 @@ class FreteDAL implements IFreteDAL {
         $query = $this->query() . "
 			WHERE frete.id_motorista = :id_motorista
 			AND frete.cod_situacao IN (" . implode(", ", $situacoes) . ")
+			LIMIT 1
 		";
-        if ($id_frete > 0) {
-            $query .= " AND frete.id_frete = :id_frete ";
-        }
-        $query .= " LIMIT 1";
         $db = DB::getDB()->prepare($query);
         $db->bindValue(":id_motorista", $id_motorista, PDO::PARAM_INT);
-        if ($id_frete > 0) {
-            $db->bindValue(":id_frete", $id_frete, PDO::PARAM_INT);
-        }
         return DB::getValueClass($db,"Emagine\\Frete\\Model\\FreteInfo");
     }
 

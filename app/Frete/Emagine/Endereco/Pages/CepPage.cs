@@ -13,7 +13,7 @@ using Xamarin.Forms;
 
 namespace Emagine.Endereco.Pages
 {
-    public class CepPage : ContentPage
+    public class CepPage: ContentPage
     {
         private StackLayout _mainLayout;
         private CepEntry _cepEntry;
@@ -25,14 +25,12 @@ namespace Emagine.Endereco.Pages
         public event EventHandler AoBuscar;
         public event EventHandler AoLogar;
 
-        public bool UsaBotaoLogin
-        {
-            get
-            {
+
+        public bool UsaBotaoLogin {
+            get {
                 return _mainLayout.Children.Contains(_loginButton);
             }
-            set
-            {
+            set {
                 if (value)
                 {
                     if (!_mainLayout.Children.Contains(_loginButton))
@@ -40,8 +38,7 @@ namespace Emagine.Endereco.Pages
                         _mainLayout.Children.Add(_loginButton);
                     }
                 }
-                else
-                {
+                else {
                     if (_mainLayout.Children.Contains(_loginButton))
                     {
                         _mainLayout.Children.Remove(_loginButton);
@@ -50,8 +47,7 @@ namespace Emagine.Endereco.Pages
             }
         }
 
-        public CepPage()
-        {
+        public CepPage() {
             Style = Estilo.Current[Estilo.TELA_EM_BRANCO];
             inicializarComponente();
 
@@ -71,8 +67,7 @@ namespace Emagine.Endereco.Pages
             _cepEntry.Focus();
         }
 
-        private void inicializarComponente()
-        {
+        private void inicializarComponente() {
             _cepEntry = new CepEntry
             {
                 HorizontalOptions = LayoutOptions.Fill,
@@ -89,8 +84,7 @@ namespace Emagine.Endereco.Pages
                     pegarEnderecoPorCep(cepApenasNumero);
                 }
             };
-            _enderecoButton = new Button
-            {
+            _enderecoButton = new Button {
                 HorizontalOptions = LayoutOptions.Fill,
                 VerticalOptions = LayoutOptions.Start,
                 Style = Estilo.Current[Estilo.BTN_PRINCIPAL],
@@ -98,8 +92,7 @@ namespace Emagine.Endereco.Pages
             };
             _enderecoButton.Clicked += (sender, e) => {
                 var cepApenasNumero = _cepEntry.TextOnlyNumber;
-                if (string.IsNullOrEmpty(cepApenasNumero))
-                {
+                if (string.IsNullOrEmpty(cepApenasNumero)) {
                     DisplayAlert("Aviso", "Preencha o CEP.", "Fechar");
                     return;
                 }
@@ -130,20 +123,17 @@ namespace Emagine.Endereco.Pages
             };
         }
 
-        private async void pegarEnderecoPorCep(string cep)
-        {
+        private async void pegarEnderecoPorCep(string cep) {
             UserDialogs.Instance.ShowLoading("Buscando...");
             try
             {
                 var regraCep = CepFactory.create();
                 var endereco = await regraCep.pegarPorCep(cep);
                 UserDialogs.Instance.HideLoading();
-                if (endereco != null)
-                {
+                if (endereco != null) {
                     AoSelecionar?.Invoke(this, endereco);
                 }
-                else
-                {
+                else {
                     string mensagem = string.Format("Nenhum endereço encontrado com o CEP {0}.", cep);
                     await DisplayAlert("Aviso", mensagem, "Fechar");
                 }

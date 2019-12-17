@@ -31,30 +31,20 @@ class FreteBLL implements IFreteBLL {
     const ERRO_MOTORISTA_NAO_DISPONIVEL = "Motorista não disponível.";
     const ERRO_FRETE_POSSUI_MOTORISTA = "Esse frete já possui um motorista.";
 
-    /**
-     * @return bool
-     */
-    public function getEnviaEmail() {
-        if (defined("FRETE_ENVIA_EMAIL")) {
-            return (FRETE_ENVIA_EMAIL == true);
-        }
-        return true;
-    }
-
 	/**
 	 * @return array<string,string>
 	 */
 	public function listarSituacao() {
 		return array(
-            FreteInfo::AGUARDANDO_PAGAMENTO => 'Aguardando Pagamento',
-            FreteInfo::PROCURANDO_MOTORISTA => 'Procurando Motorista',
+			FreteInfo::AGUARDANDO_PAGAMENTO => 'Aguardando Pagamento',
+			FreteInfo::PROCURANDO_MOTORISTA => 'Procurando Motorista',
             FreteInfo::APROVANDO_MOTORISTA => 'Aguardando aprovação',
             FreteInfo::AGUARDANDO => 'Aguardando',
-            FreteInfo::PEGANDO_ENCOMENDA => 'Pegando encomenda',
-            FreteInfo::ENTREGANDO => 'Entregando',
-            FreteInfo::ENTREGUE => 'Entregue',
-            FreteInfo::ENTREGA_CONFIRMADA => 'Entrega Confirmada',
-            FreteInfo::CANCELADO => 'Cancelado'
+			FreteInfo::PEGANDO_ENCOMENDA => 'Pegando encomenda',
+			FreteInfo::ENTREGANDO => 'Entregando',
+			FreteInfo::ENTREGUE => 'Entregue',
+      FreteInfo::ENTREGA_CONFIRMADA => 'Entrega Confirmada',
+			FreteInfo::CANCELADO => 'Cancelado'
 		);
 	}
 
@@ -127,13 +117,12 @@ class FreteBLL implements IFreteBLL {
     /**
      * @throws Exception
      * @param int $id_motorista
-     * @param int $id_frete
      * @param bool $atualizado
      * @return FreteInfo
      */
-    public function pegarAbertoPorMotorista($id_motorista, $id_frete = 0, $atualizado = true) {
+    public function pegarAbertoPorMotorista($id_motorista, $atualizado = true) {
         $dal = FreteDALFactory::create();
-        $frete = $dal->pegarAbertoPorMotorista($id_motorista, $id_frete);
+        $frete = $dal->pegarAbertoPorMotorista($id_motorista);
         if ($atualizado == true && !is_null($frete)) {
             $this->atualizarInterno($frete);
         }
@@ -184,13 +173,6 @@ class FreteBLL implements IFreteBLL {
         }
         if (is_null($frete->getNotaMotorista())) {
             $frete->setNotaMotorista(0);
-        }
-        if (!isNullOrEmpty($frete->getObservacao())) {
-            $observacao = trim($frete->getObservacao());
-            if (mb_strlen($observacao) > 300) {
-                $observacao = mb_substr($observacao, 0, 300);
-            }
-            $frete->setObservacao($observacao);
         }
 	}
 
@@ -367,10 +349,7 @@ class FreteBLL implements IFreteBLL {
 	 */
 	public function alterar($frete) {
 		$this->validar($frete);
-        $antigoFrete = null;
-		if ($this->getEnviaEmail()) {
-            $antigoFrete = $this->pegar($frete->getId());
-        }
+		$antigoFrete = $this->pegar($frete->getId());
 		$dal = FreteDALFactory::create();
 		$regraFreteLocal = new FreteLocalBLL();
         $dalTipoVeiculo = FreteTipoVeiculoDALFactory::create();
@@ -406,7 +385,7 @@ class FreteBLL implements IFreteBLL {
 		    DB::rollBack();
 			throw $e;
 		}
-        if ($this->getEnviaEmail() && !is_null($antigoFrete)) {
+        if (!is_null($antigoFrete)) {
             if ($antigoFrete->getCodSituacao() != $frete->getCodSituacao()) {
                 if ($frete->getCodSituacao() == FreteInfo::ENTREGA_CONFIRMADA) {
                     $usuario = $frete->getUsuario();
@@ -691,7 +670,7 @@ class FreteBLL implements IFreteBLL {
      */
     private function enviarEmail($email, FreteInfo $frete) {
         $regraEmail = new MailJetBLL();
-        $assunto = "[" . APP_NAME . "] Atendimento Finalizando #" . $frete->getId();
+        $assunto = "[Easy Barcos] Atendimento Finalizando #" . $frete->getId();
         $conteudo = $this->gerarConteudo($frete);
         $regraEmail->sendmail($email, $assunto, $conteudo);
     }

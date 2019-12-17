@@ -28,6 +28,11 @@ namespace Emagine.Pagamento.Pages
         private bool _usaBoleto = true;
         private bool _usaCartaoOffline = true;
 
+        private bool _usaCredito = true;
+        private bool _usaDebito = true;
+        private bool _usaDinheiro = true;
+        private bool _usaBoleto = true;
+
         public bool UsaCredito {
             get {
                 return _usaCredito;
@@ -68,8 +73,50 @@ namespace Emagine.Pagamento.Pages
             }
         }
 
-        public bool UsaCartaoOffline
-        {
+        public PagamentoInfo Pagamento { get; set; }
+
+        public bool UsaCredito {
+            get {
+                return _usaCredito;
+            }
+            set {
+                _usaCredito = value;
+                atualizarTela();
+            }
+        }
+
+        public bool UsaDebito {
+            get {
+                return _usaDebito;
+            }
+            set
+            {
+                _usaDebito = value;
+                atualizarTela();
+            }
+        }
+
+        public bool UsaDinheiro {
+            get {
+                return _usaDinheiro;
+            }
+            set {
+                _usaDinheiro = value;
+                atualizarTela();
+            }
+        }
+
+        public bool UsaBoleto {
+            get {
+                return _usaBoleto;
+            }
+            set {
+                _usaBoleto = value;
+                atualizarTela();
+            }
+        }
+
+        public bool UsaCartaoOffline {
             get
             {
                 return _usaCartaoOffline;
@@ -80,8 +127,6 @@ namespace Emagine.Pagamento.Pages
                 atualizarTela();
             }
         }
-
-        public PagamentoInfo Pagamento { get; set; }
 
         public event EventHandler<PagamentoInfo> AoEfetuarPagamento;
 
@@ -318,6 +363,26 @@ namespace Emagine.Pagamento.Pages
                 UserDialogs.Instance.HideLoading();
                 UserDialogs.Instance.Alert(erro.Message, "Erro", "Fechar");
             }
+        }
+
+        private async void dinheiroClicked(object sender, EventArgs e)
+        {
+            if (Pagamento == null)
+            {
+                await DisplayAlert("Erro", "Nenhum pagamento informado!", "Fechar");
+                return;
+            }
+            Pagamento.Tipo = TipoPagamentoEnum.Dinheiro;
+            var dinheiroPage = new DinheiroPage
+            {
+                Title = "Em dinheiro",
+                Pagamento = Pagamento
+            };
+            dinheiroPage.AoEfetuarPagamento += (s2, pagamento) =>
+            {
+                AoEfetuarPagamento?.Invoke(this, pagamento);
+            };
+            await Navigation.PushAsync(dinheiroPage);
         }
 
         private async void cartaoOfflineClicked(object sender, EventArgs e)

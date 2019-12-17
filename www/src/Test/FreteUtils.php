@@ -1,20 +1,25 @@
 <?php
 namespace Emagine\Frete\Test;
 
-use Emagine\Endereco\Test\EnderecoUtils;
 use Emagine\Frete\BLLFactory\FreteBLLFactory;
 use Emagine\Frete\Model\MotoristaInfo;
 use Exception;
 use joshtronic\LoremIpsum;
 use PHPUnit\Framework\TestCase;
 use Emagine\Base\Test\TesteUtils;
+use Emagine\Endereco\Model\BairroInfo;
+use Emagine\Endereco\Model\CidadeInfo;
+use Emagine\Endereco\Model\EnderecoInfo;
+use Emagine\Endereco\Model\UfInfo;
 use Emagine\Frete\BLL\TipoCarroceriaBLL;
 use Emagine\Frete\BLL\TipoVeiculoBLL;
 use Emagine\Frete\BLLFactory\MotoristaBLLFactory;
 use Emagine\Frete\Model\FreteLocalInfo;
 use Emagine\Login\BLL\UsuarioBLL;
 use Emagine\Login\Model\UsuarioInfo;
+use Emagine\Endereco\BLL\CepBLL;
 use Emagine\Frete\Model\FreteInfo;
+use Webmozart\Assert\Assert;
 
 class FreteUtils
 {
@@ -78,6 +83,115 @@ class FreteUtils
 
     /**
      * @param TestCase $testCase
+     * @return UfInfo
+     * @throws Exception
+     */
+    public static function pegarUf(TestCase $testCase) {
+        $regraCep = new CepBLL();
+        $estados = $regraCep->listarUf();
+        $testCase->assertGreaterThan(0, count($estados), "Nenhum usuário ativo disponível.");
+        shuffle($estados);
+        /** @var UfInfo $uf */
+        $uf = array_values($estados)[0];
+        $testCase->assertNotNull($uf, "Nenhum estado disponível.");
+        return $uf;
+    }
+
+    /**
+     * @throws Exception
+     * @param TestCase $testCase
+     * @param string $uf
+     * @return CidadeInfo
+     */
+    public static function pegarCidade(TestCase $testCase, $uf) {
+        $regraCep = new CepBLL();
+        $cidades = $regraCep->buscarCidadePorUf("", $uf);
+        $testCase->assertGreaterThan(0, count($cidades), "Nenhum usuário ativo disponível.");
+        shuffle($cidades);
+        /** @var CidadeInfo $cidade */
+        $cidade = array_values($cidades)[0];
+        $testCase->assertNotNull($cidade, "Nenhuma cidade disponível.");
+        return $cidade;
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @param CidadeInfo $cidade
+     * @return BairroInfo
+     * @throws Exception
+     */
+    public static function pegarBairro(TestCase $testCase, CidadeInfo $cidade) {
+        $regraCep = new CepBLL();
+        $bairros = $regraCep->buscarBairroPorIdCidade("", $cidade->getId());
+        $mensagem = sprintf("Nenhum bairro na cidade %s.", $cidade->getNome());
+        $testCase->assertGreaterThan(0, count($bairros), $mensagem);
+        shuffle($bairros);
+        /** @var BairroInfo $bairro */
+        $bairro = array_values($bairros)[0];
+        $testCase->assertNotNull($bairro, "Nenhum bairro disponível.");
+        return $bairro;
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @param BairroInfo $bairro
+     * @return EnderecoInfo
+     * @throws Exception
+     */
+    public static function pegarLogradouro(TestCase $testCase, BairroInfo $bairro) {
+        $regraCep = new CepBLL();
+        $logradouros = $regraCep->buscarLogradouroPorIdBairro("", $bairro->getId());
+        $mensagem = sprintf("Nenhum logradouro para o bairro %s.", $bairro->getNome());
+        $testCase->assertGreaterThan(0, count($logradouros), $mensagem);
+        shuffle($logradouros);
+        /** @var EnderecoInfo $logradouro */
+        $logradouro = array_values($logradouros)[0];
+        $testCase->assertNotNull($logradouro, "Nenhum logradouro disponível.");
+        return $logradouro;
+    }
+
+
+    /**
+     * @param TestCase $testCase
+     * @param UfInfo $uf
+     * @param CidadeInfo $cidade
+     * @return EnderecoInfo
+     * @throws Exception
+     */
+    public static function pegarEnderecoAleatorio(TestCase $testCase, UfInfo $uf, CidadeInfo &$cidade) {
+        $regraCep = new CepBLL();
+
+        $tentativas = 0;
+        $endereco = null;
+        do {
+            $tentativas++;
+
+            $bairros = $regraCep->buscarBairroPorIdCidade("", $cidade->getId());
+            if (count($bairros) == 0) {
+                $cidade = self::pegarCidade($testCase, $uf->getUf());
+                continue;
+            }
+            shuffle($bairros);
+            /** @var BairroInfo $bairro */
+            $bairro = array_values($bairros)[0];
+
+            $logradouros = $regraCep->buscarLogradouroPorIdBairro("", $bairro->getId());
+            if (count($logradouros) == 0) {
+                continue;
+            }
+            shuffle($logradouros);
+            /** @var EnderecoInfo $logradouro */
+            $endereco = array_values($logradouros)[0];
+
+        } while (is_null($endereco) && $tentativas < 50);
+
+        $testCase->assertNotNull($endereco, "Nenhum endereço encontrado após 50 tentativas.");
+
+        return $endereco;
+    }
+
+    /**
+     * @param TestCase $testCase
      * @return FreteInfo
      * @throws Exception
      */
@@ -124,10 +238,10 @@ class FreteUtils
         do {
             $frete->limparLocal();
             $tentativas++;
-            $uf = EnderecoUtils::pegarUf($testCase);
-            $cidade = EnderecoUtils::pegarCidade($testCase, $uf->getUf());
+            $uf = self::pegarUf($testCase);
+            $cidade = self::pegarCidade($testCase, $uf->getUf());
             for ($i = 1; $i <= $quantidadeLocal; $i++) {
-                $endereco = EnderecoUtils::pegarEnderecoAleatorio($testCase, $uf, $cidade);
+                $endereco = self::pegarEnderecoAleatorio($testCase, $uf, $cidade);
 
                 $local = new FreteLocalInfo();
                 $local->setCep($endereco->getCep());

@@ -45,13 +45,13 @@ interface IMotoristaBLL {
 	 * @param MotoristaInfo $motorista
      * @return int
 	 */
-	public function inserir(MotoristaInfo $motorista);
+	public function inserir($motorista);
 
 	/**
 	 * @throws Exception
 	 * @param MotoristaInfo $motorista
 	 */
-	public function alterar(MotoristaInfo $motorista);
+	public function alterar($motorista);
 
 	/**
 	 * @throws Exception
@@ -64,7 +64,7 @@ interface IMotoristaBLL {
      * @return MotoristaRetornoInfo
      * @throws Exception
      */
-    public function atualizar(MotoristaEnvioInfo $envio);
+    public function atualizar($envio);
 
     /**
      * @param int $id_motorista

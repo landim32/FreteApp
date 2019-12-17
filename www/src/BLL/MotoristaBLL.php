@@ -91,7 +91,7 @@ class MotoristaBLL implements IMotoristaBLL {
 	 * @param MotoristaInfo $motorista
      * @return int
 	 */
-	public function inserir(MotoristaInfo $motorista) {
+	public function inserir($motorista) {
 		$this->validar($motorista);
 		if (!is_null($motorista->getUsuario())) {
 		    $regraUsuario = UsuarioDALFactory::create();
@@ -122,7 +122,7 @@ class MotoristaBLL implements IMotoristaBLL {
 	 * @throws Exception
 	 * @param MotoristaInfo $motorista
 	 */
-	public function alterar(MotoristaInfo $motorista) {
+	public function alterar($motorista) {
 		$this->validar($motorista);
         if (!is_null($motorista->getUsuario())) {
             $regraUsuario = UsuarioDALFactory::create();
@@ -208,15 +208,15 @@ class MotoristaBLL implements IMotoristaBLL {
      * @return MotoristaRetornoInfo
      * @throws Exception
      */
-    public function atualizar(MotoristaEnvioInfo $envio)
+    public function atualizar($envio)
     {
         $dal = MotoristaDALFactory::create();
         if (!($envio->getCodDisponibilidade() > 0)) {
             $envio->setCodDisponibilidade(MotoristaInfo::DISPONIVEL);
         }
 
-        $regraFrete = new FreteBLL();
-        $frete = $regraFrete->pegarAbertoPorMotorista($envio->getIdMotorista(), $envio->getIdFrete());
+        $regraFrete = FreteBLLFactory::create();
+        $frete = $regraFrete->pegarAbertoPorMotorista($envio->getIdMotorista());
 
         $dal->atualizar($envio);
         $retorno = new MotoristaRetornoInfo();

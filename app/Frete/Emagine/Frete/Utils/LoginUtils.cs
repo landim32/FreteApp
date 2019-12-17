@@ -8,6 +8,7 @@ using Emagine.Login.Model;
 using Emagine.Login.Pages;
 using Emagine.Pagamento.Model;
 using Emagine.Pagamento.Pages;
+using Frete.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;

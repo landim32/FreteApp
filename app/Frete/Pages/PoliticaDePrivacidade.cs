@@ -1,19 +1,19 @@
 ﻿using System;
 using Xamarin.Forms;
 
-namespace EmagineFrete.Pages
+namespace Frete.Pages
 {
     public class PoliticaDePrivacidade : ContentPage
     {
-        public PoliticaDePrivacidade(bool parceiro)
+        public PoliticaDePrivacidade()
         {
-            Title = "Termos e Condições";
+            Title = "TERMOS DE ADESÃO";
             var wv = 
             Content = new WebView
             {
                 VerticalOptions = LayoutOptions.FillAndExpand,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
-                Source = new UrlWebViewSource { Url = parceiro ? "file:///android_asset/Html/ContratoParceiro.html" : "file:///android_asset/Html/Contrato.html" }
+                Source = new UrlWebViewSource { Url = "file:///android_asset/Html/Contrato.html" }
             };
         }
     }

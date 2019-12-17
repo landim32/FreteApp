@@ -30,10 +30,9 @@ interface IFreteDAL {
 
     /**
      * @param int $id_motorista
-     * @param int $id_frete
      * @return FreteInfo
      */
-    public function pegarAbertoPorMotorista($id_motorista, $id_frete = 0);
+    public function pegarAbertoPorMotorista($id_motorista);
 
 	/**
 	 * @param FreteInfo $frete

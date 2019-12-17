@@ -37,16 +37,11 @@ namespace Emagine.Frete.BLL
         {
             return await queryGet<List<FreteInfo>>(GlobalUtils.URLAplicacao + "/api/frete/listar-disponivel/" + idUsuario);
         }
-
-        public Task<FreteRetornoInfo> atualizar(int idFrete)
-        {
-            return queryGet<FreteRetornoInfo>(GlobalUtils.URLAplicacao + "/api/frete/atualizar/" + idFrete.ToString());
-        }
         
-        public async Task limparAtual() {
+        public void limparAtual() {
             _freteAtual = null;
             App.Current.Properties.Remove("frete");
-            await App.Current.SavePropertiesAsync();
+            App.Current.SavePropertiesAsync();
         }
 
         public Task<FreteInfo> pegar(int id_frete)
@@ -74,6 +69,11 @@ namespace Emagine.Frete.BLL
                 }
             }
             return queryGet<List<FreteInfo>>(url);
+        }
+
+        public Task<FreteRetornoInfo> atualizar(int idFrete)
+        {
+            return queryGet<FreteRetornoInfo>(GlobalUtils.URLAplicacao + "/api/frete/atualizar/" + idFrete.ToString());
         }
 
         public Task<List<FreteHistoricoInfo>> listarHistorico(long idFrete)

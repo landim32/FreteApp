@@ -1,10 +1,7 @@
 ﻿using Emagine.Base.Controls;
 using Emagine.Base.Estilo;
 using Emagine.Produto.Controls;
-using Emagine.Produto.Model;
 using FormsPlugin.Iconize;
-using Plugin.Share;
-using Plugin.Share.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,9 +23,15 @@ namespace Emagine.Veiculo.Cells
         private AbsoluteLayout _promocaoStack;
         private Label _moedaPromocaoLabel;
         private Label _valorPromocaoLabel;
+
+        /*
+        private Label _quantidadeLabel;
+        private Button _adicionarButton;
+        private Button _removerButton;
+        */
         private QuantidadeControl _quantidadeButton;
+
         private IconImage _destaqueIcon;
-        private IconImage _compartilharButton;
 
         public ProdutoCell() {
             inicializarComponente();
@@ -59,8 +62,7 @@ namespace Emagine.Veiculo.Cells
                                     HorizontalOptions = LayoutOptions.FillAndExpand,
                                     Children = {
                                         _nomeLabel,
-                                        _destaqueIcon,
-                                        _compartilharButton
+                                        _destaqueIcon
                                     }
                                 },
                                 new StackLayout {
@@ -120,7 +122,7 @@ namespace Emagine.Veiculo.Cells
                 FontAttributes = FontAttributes.Bold,
                 LineBreakMode = LineBreakMode.TailTruncation,
                 VerticalOptions = LayoutOptions.Start,
-                HorizontalOptions = LayoutOptions.StartAndExpand,
+                HorizontalOptions = LayoutOptions.Start,
                 TextColor = Estilo.Current.PrimaryColor
             };
             _nomeLabel.SetBinding(Label.TextProperty, new Binding("Nome"));
@@ -233,45 +235,12 @@ namespace Emagine.Veiculo.Cells
             };
             _quantidadeButton.SetBinding(QuantidadeControl.QuantidadeProperty, new Binding("QuantidadeCarrinho"));
             _quantidadeButton.SetBinding(QuantidadeControl.ProdutoProperty, new Binding("."));
-
             _destaqueIcon = new IconImage {
-                VerticalOptions = LayoutOptions.Start,
-                HorizontalOptions = LayoutOptions.Start,
                 Icon = "fa-star",
                 IconColor = Color.FromHex("#ffc500"),
                 IconSize = 24
             };
             _destaqueIcon.SetBinding(Label.IsVisibleProperty, new Binding("Destaque"));
-
-            _compartilharButton = new IconImage
-            {
-                VerticalOptions = LayoutOptions.CenterAndExpand,
-                HorizontalOptions = LayoutOptions.End,
-                Icon = "fa-share-alt",
-                IconColor = Estilo.Current.PrimaryColor,
-                IconSize = 24,
-                Margin = new Thickness(0, 2)
-            };
-            var tapGestureRecognizer = new TapGestureRecognizer();
-            tapGestureRecognizer.Tapped += (sender, e) =>
-            {
-                if (!CrossShare.IsSupported)
-                    return;
-
-                var produto = (ProdutoInfo)BindingContext;
-                if (produto == null) {
-                    return;
-                }
-
-                CrossShare.Current.Share(new ShareMessage
-                {
-                    //Title = produto.Nome,
-                    //Text = "R$ " + produto.ValorFinal.ToString("N2"),
-                    Url = "http://smartappcompras.com.br/site/" + produto.Slug
-                });
-            };
-            _compartilharButton.GestureRecognizers.Add(tapGestureRecognizer);
-
         }
     }
 }

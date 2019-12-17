@@ -50,13 +50,13 @@ namespace Emagine.Mapa.Controls
             else 
             {
             */
-            if (Value != null) {
-                var mapaPage = new MapaPontoPage(Value.Titulo, Value.Endereco, Value.Latitude, Value.Longitude);
-                Navigation.PushAsync(mapaPage);
-            }
-            else {
-                UserDialogs.Instance.Alert("Preencha o CEP antes", "Erro", "Entendi");
-            }
+                if (Value != null)
+                {
+                    var mapaPage = new MapaPontoPage(Value.Titulo, Value.Endereco, Value.Latitude, Value.Longitude);
+                    Navigation.PushAsync(mapaPage);
+                }
+                else
+                    UserDialogs.Instance.ShowError("Preencha o CEP antes", 1000);
             //}
         }
 
