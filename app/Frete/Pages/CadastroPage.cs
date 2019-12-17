@@ -467,7 +467,7 @@ namespace EmagineFrete.Pages
                         var usuario = regraUsuario.pegarAtual();
                         if (usuario == null)
                         { 
-                            throw new Exception("Você não está logado com seu usuário. Não pode se tornar um parceiro.");
+                            throw new Exception("Você não está logado com seu usuário. Não pode se tornar um motorista.");
                         }
                         /*
                         var tipo = TipoVeiculoEnum.Carro;

@@ -180,7 +180,6 @@
     <Compile Include="Pages\ConfirmaEntregaPage.cs" />
     <Compile Include="Pages\CorridasEmEspera.cs" />
     <Compile Include="Pages\DetalheProdutoPage.cs" />
-    <Compile Include="Pages\FormMailNvoid.cs" />
     <Compile Include="Pages\FreteListaPage.cs" />
     <Compile Include="Pages\FretePage.cs" />
     <Compile Include="Pages\ImagemProdutoPage.cs" />

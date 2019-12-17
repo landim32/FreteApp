@@ -245,7 +245,6 @@
     <AndroidResource Include="Resources\drawable\btnMeuPedido.png" />
     <AndroidResource Include="Resources\drawable\btnRastrear.png" />
     <AndroidResource Include="Resources\drawable\btnSobre.png" />
-    <AndroidResource Include="Resources\drawable\P.png" />
     <AndroidResource Include="Resources\drawable\filtro.png" />
   </ItemGroup>
   <ItemGroup>
@@ -254,16 +253,10 @@
     <Folder Include="Resources\drawable-xxhdpi\" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Html\Contrato.html" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Frete\Frete.csproj">
       <Project>{251dcb9b-59d4-48f0-a269-e72f6ab552cf}</Project>
       <Name>Frete</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\Html\ContratoParceiro.html" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Support.Compat.25.4.0.2\build\MonoAndroid70\Xamarin.Android.Support.Compat.targets" Condition="Exists('..\packages\Xamarin.Android.Support.Compat.25.4.0.2\build\MonoAndroid70\Xamarin.Android.Support.Compat.targets')" />

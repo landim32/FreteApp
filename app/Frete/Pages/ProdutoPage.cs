@@ -85,24 +85,28 @@ namespace EmagineFrete.Pages
                 _UtilitarioButton.Marcado = true;
                 _CaminhaoButton.Marcado = false;
             };
+            /*
             if(GlobalUtils.getAplicacaoAtual() == AplicacaoEnum.APLICACAO02){
                 _CaminhaoButton = new ProdutoButton("fa-truck", "#Exclusive");    
             } else {
-                _CaminhaoButton = new ProdutoButton("fa-truck", "Caminhão");
-            }
+            */
+            _CaminhaoButton = new ProdutoButton("fa-truck", "Caminhão");
+            //}
 
             _CaminhaoButton.AoClicar = (sender, e) => {
+                /*
                 if (GlobalUtils.getAplicacaoAtual() == AplicacaoEnum.APLICACAO02)
                 {
                     Navigation.PushAsync(new FormMailNvoid());
                 }
                 else 
                 {
-                    _MotoButton.Marcado = false;
-                    _CarroButton.Marcado = false;
-                    _UtilitarioButton.Marcado = false;
-                    _CaminhaoButton.Marcado = true;   
-                }
+                */
+                _MotoButton.Marcado = false;
+                _CarroButton.Marcado = false;
+                _UtilitarioButton.Marcado = false;
+                _CaminhaoButton.Marcado = true;
+                //}
             };
 
 

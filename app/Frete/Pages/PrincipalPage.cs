@@ -5,8 +5,10 @@ using Emagine.Base.Estilo;
 using Emagine.Base.Model;
 using Emagine.Base.Utils;
 using Emagine.Frete.BLL;
+using Emagine.Frete.Factory;
 using Emagine.Frete.Model;
 using Emagine.Login.BLL;
+using Emagine.Login.Factory;
 using EmagineFrete.Controls;
 using EmagineFrete.Model;
 using EmagineFrete.Utils;
@@ -51,50 +53,54 @@ namespace EmagineFrete.Pages
             PermissaoUtils.pedirPermissao();
             if (!_motoristaVerificado)
             {
-                var usuario = new UsuarioBLL().pegarAtual();
-                var motorista = new MotoristaBLL().pegarAtual();
-                if (motorista == null)
+                var regraUsuario = UsuarioFactory.create();
+                var regraMotorista = MotoristaFactory.create();
+                var usuario = regraUsuario.pegarAtual();
+                var motorista = regraMotorista.pegarAtual();
+                if (motorista != null)
                 {
-                    try
-                    {
-                        UserDialogs.Instance.ShowLoading("carregando...");
-                        motorista = await new MotoristaBLL().pegar(usuario.Id);
-                        if (motorista != null)
-                        {
-                            //var mn = new Menu();
-                            //mn.setMenuMotorista();
-                            //RootPage.root.Master = (ContentPage)mn;
-                            new MotoristaBLL().gravarAtual(motorista);
-                            if (motorista.Situacao != MotoristaSituacaoEnum.Ativo) {
-                                adicionarSituacao(motorista.Situacao);
-                            }
-                        }
-                        else
-                        {
-                            //var mn = new Menu();
-                            //mn.setMenuUsuario();
-                            //RootPage.root.Master = (ContentPage)mn;
-                            _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-                            _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-                            _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-                            _mainLayout.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-                            _mainLayout.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                    //var mn = new Menu();
+                    //mn.setMenuMotorista();
+                    //RootPage.root.Master = (ContentPage)mn;
+                    //regraMotorista.gravarAtual(motorista);
 
-                            _mainLayout.Children.Add(_EnviarProdutoButton, 0, 0);
-                            _mainLayout.Children.Add(_RastrearMercadoriaButton, 1, 0);
-                            _mainLayout.Children.Add(_FaleConoscoButton, 0, 1);
-                            _mainLayout.Children.Add(_MeuPedidoButton, 1, 1);
-                            _mainLayout.Children.Add(_SobreAplicativoButton, 0, 2);
-                            _mainLayout.Children.Add(_ConfiguracaoButton, 1, 2);
-                            adicionarBotaoMotorista();
-                        }
-                        UserDialogs.Instance.HideLoading();
-                    }
-                    catch (Exception e)
+                    _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+                    _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+                    _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+                    _mainLayout.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                    _mainLayout.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+                    _mainLayout.Children.Add(_EnviarProdutoButton, 0, 0);
+                    _mainLayout.Children.Add(_RastrearMercadoriaButton, 1, 0);
+                    _mainLayout.Children.Add(_FaleConoscoButton, 0, 1);
+                    _mainLayout.Children.Add(_MeuPedidoButton, 1, 1);
+                    _mainLayout.Children.Add(_SobreAplicativoButton, 0, 2);
+                    _mainLayout.Children.Add(_ConfiguracaoButton, 1, 2);
+
+                    if (motorista.Situacao != MotoristaSituacaoEnum.Ativo)
                     {
-                        UserDialogs.Instance.HideLoading();
-                        UserDialogs.Instance.ShowError(e.Message, 8000);
+                        adicionarSituacao(motorista.Situacao);
                     }
+                }
+                else
+                {
+                    //var mn = new Menu();
+                    //mn.setMenuUsuario();
+                    //RootPage.root.Master = (ContentPage)mn;
+                    _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+                    _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+                    _mainLayout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+                    _mainLayout.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+                    _mainLayout.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+                    _mainLayout.Children.Add(_EnviarProdutoButton, 0, 0);
+                    _mainLayout.Children.Add(_RastrearMercadoriaButton, 1, 0);
+                    _mainLayout.Children.Add(_FaleConoscoButton, 0, 1);
+                    _mainLayout.Children.Add(_MeuPedidoButton, 1, 1);
+                    _mainLayout.Children.Add(_SobreAplicativoButton, 0, 2);
+                    _mainLayout.Children.Add(_ConfiguracaoButton, 1, 2);
+
+                    adicionarBotaoMotorista();
                 }
                 _motoristaVerificado = true;
             }
@@ -161,7 +167,7 @@ namespace EmagineFrete.Pages
         private void adicionarBotaoMotorista() {
             _MotoristaButton = new Button
             {
-                Text = "Seja um parceiro!",
+                Text = "Seja um motorista!",
                 HorizontalOptions = LayoutOptions.Fill,
                 VerticalOptions = LayoutOptions.Start,
                 Style = Estilo.Current[Estilo.BTN_PRINCIPAL],

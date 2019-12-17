@@ -139,7 +139,8 @@ namespace EmagineFrete.Pages
             _CriarContaButton = new Button()
             {
                 Text = "CRIAR NOVA CONTA",
-                Style = Estilo.Current[Estilo.BTN_PRINCIPAL],
+                //Style = Estilo.Current[Estilo.BTN_PRINCIPAL],
+                Style = Estilo.Current[Estilo.BTN_SUCESSO],
                 VerticalOptions = LayoutOptions.Start,
                 HorizontalOptions = LayoutOptions.Fill,
                 Margin = new Thickness(10, 0)

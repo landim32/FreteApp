@@ -78,8 +78,9 @@ namespace EmagineFrete.Popups
             };
             _FornecedorButton = new Button()
             {
-                Text = "PARCEIRO",
-                Style = Estilo.Current[Estilo.BTN_PRINCIPAL],
+                Text = "MOTORISTA",
+                //Style = Estilo.Current[Estilo.BTN_PRINCIPAL],
+                Style = Estilo.Current[Estilo.BTN_SUCESSO],
                 VerticalOptions = LayoutOptions.Start,
                 HorizontalOptions = LayoutOptions.Fill,
                 Margin = new Thickness(10, 0)

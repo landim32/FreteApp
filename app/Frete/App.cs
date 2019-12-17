@@ -26,8 +26,10 @@ namespace Emagine
 
         public App()
         {
+            //GlobalUtils.URLAplicacao = "http://emagine.com.br/frete-simples";
             GlobalUtils.URLAplicacao = "http://emagine.com.br/nvoid";
             GlobalUtils.setAplicacaoAtual(AplicacaoEnum.APLICACAO02);
+            //GlobalUtils.setAplicacaoAtual(AplicacaoEnum.APLICACAO01);
             var estilo = criarEstilo();
 
             GPSUtils.UsaLocalizacao = true;
@@ -56,7 +58,7 @@ namespace Emagine
             mainPage.Appearing += MotoristaUtils.inicializar;
             var rootPage = new RootPage
             {
-                NomeApp = "NVoid",
+                NomeApp = "Frete Simples",
                 PaginaAtual = mainPage,
                 Menus = gerarMenu()
             };
@@ -70,8 +72,8 @@ namespace Emagine
         private Estilo criarEstilo()
         {
             var estilo = Estilo.Current;
-            estilo.PrimaryColor = Color.FromHex("#10142f");
-            estilo.SuccessColor = Color.FromHex("#a2c760");
+            estilo.PrimaryColor = Color.FromHex("#c55a11"); //Color.FromRgb(197, 90, 17);
+            estilo.SuccessColor = Color.FromHex("#3c706a"); //Color.FromHex("#a2c760");
             estilo.InfoColor = estilo.PrimaryColor;
             estilo.WarningColor = Color.FromHex("#e2944a");
             estilo.DangerColor = Color.FromHex("#d9534f");
@@ -383,7 +385,7 @@ namespace Emagine
                 Titulo = "Fale Conosco",
                 aoClicar = (sender, e) =>
                 {
-                    Device.OpenUri(new Uri("mailto:exclusive@nvoid.com.br"));
+                    Device.OpenUri(new Uri("mailto:rodrigo@emagine.com.br"));
                 }
             });
 

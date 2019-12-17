@@ -106,15 +106,15 @@ namespace EmagineFrete.Pages
             {
                 Type = PinType.Place,
                 Position = localizacaoAtual,
-                Label = "Parceiro",
+                Label = "Motorista",
                 Address = "Toque para ver detalhes..."
             };
             pin.Clicked += (sender, e) => {
                 UserDialogs.Instance.Alert((_FreteInfo == null ?
-                         "Obtendo parceiro"
+                         "Obtendo motorista"
                          : "Nome: " + _FreteInfo.Motorista.Usuario.Nome
                          + "\nTelefone: " + _FreteInfo.Motorista.Usuario.Telefone
-                         + "\nPlaca: " + _FreteInfo.Motorista.Placa), "Parceiro", "Fechar");
+                         + "\nPlaca: " + _FreteInfo.Motorista.Placa), "Motorista", "Fechar");
             };
             _CustomMap.Pins.Clear();
             _CustomMap.Pins.Add(pin);
@@ -163,13 +163,13 @@ namespace EmagineFrete.Pages
                 case FreteSituacaoEnum.EntregaConfirmada:
                     return "Entrega confirmada";
                 case FreteSituacaoEnum.Entregando:
-                    return "Parceiro a caminho";
+                    return "Motorista a caminho";
                 case FreteSituacaoEnum.Entregue:
                     return "Confirmar entrega";
                 case FreteSituacaoEnum.PegandoEncomenda:
-                    return "Parceiro a caminho da entrega";
+                    return "Motorista a caminho da entrega";
                 case FreteSituacaoEnum.ProcurandoMotorista:
-                    return "Aguardando parceiro";
+                    return "Aguardando motorista";
 
             }
             return "Status desconhecido.";

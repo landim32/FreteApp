@@ -23,12 +23,12 @@ namespace EmagineFrete.Pages
         private Button _EnviarButton;
         private Label _ObservacaoLbl;
         private Label _Valor;
-        private bool _Exclusive;
+        //private bool _Exclusive;
 
         public DetalheProdutoPage(FreteInfo info)
         {
             _Info = info;
-            _Exclusive = _Info.Distancia > 150000;
+            //_Exclusive = _Info.Distancia > 150000;
             inicializarComponente();
             Title = "Resumo";
             Content = new StackLayout(){
@@ -83,24 +83,21 @@ namespace EmagineFrete.Pages
                 VerticalOptions = LayoutOptions.Start,
                 Margin = new Thickness(8, 0),
                 Style = Estilo.Current[Estilo.BTN_PRINCIPAL],
-                Text = _Exclusive ? "Ir para #Exclusive" : "Ir para pagamento"
+                //Text = _Exclusive ? "Ir para #Exclusive" : "Ir para pagamento"
+                Text = "Ir para pagamento"
             };
 
             _EnviarButton.Clicked += (sender, e) => {
-                if(!_Exclusive){
-                    //Navigation.PushAsync(new SelecionaMetodoPagamento(_Info));
-                    var frete = _Info;
-                    var pagamentoPage = FreteUtils.gerarPagamento(frete, (pagamento) =>
-                    {
-                        UserDialogs.Instance.Toast("Frete cadastrado com sucesso. Procurando motorista!");
-                        Navigation.PopToRootAsync();
-                    });
-                    Navigation.PushAsync(pagamentoPage);
-                } else {
-                    Navigation.PushAsync(new FormMailNvoid(_Info));
-                }
+                var frete = _Info;
+                var pagamentoPage = FreteUtils.gerarPagamento(frete, (pagamento) =>
+                {
+                    UserDialogs.Instance.Toast("Frete cadastrado com sucesso. Procurando motorista!");
+                    Navigation.PopToRootAsync();
+                });
+                Navigation.PushAsync(pagamentoPage);
             };
 
+            /*
             if(!_Exclusive){
                 _Valor = new Label()
                 {
@@ -119,15 +116,16 @@ namespace EmagineFrete.Pages
                     Margin = 10
                 };
             } else {
-                _Valor = new Label
-                {
-                    HeightRequest = 0
-                };
-                _ObservacaoLbl = new Label
-                {
-                    HeightRequest = 0
-                };
-            }
+            */
+            _Valor = new Label
+            {
+                HeightRequest = 0
+            };
+            _ObservacaoLbl = new Label
+            {
+                HeightRequest = 0
+            };
+            //}
 
             _CustomMap = new CustomMap
             {
