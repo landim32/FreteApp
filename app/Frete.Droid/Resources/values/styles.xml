@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<style name="MyTheme" parent="MyTheme.Base">
+	</style>
+  <color name="CorPrimary">#197da6</color>
+  <color name="CorSuccess">#5cb85c</color>
+	<style name="MyTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+		<item name="windowNoTitle">true</item>
+		<item name="windowActionBar">false</item>
+		<item name="colorPrimary">@color/CorPrimary</item>
+		<item name="colorPrimaryDark">#136080</item>
+		<item name="colorAccent">@color/CorPrimary</item>
+		<!-- You can also set colorControlNormal, colorControlActivated
+         colorControlHighlight and colorSwitchThumbNormal. -->
+		<item name="windowActionModeOverlay">true</item>
+		<item name="android:datePickerDialogTheme">@style/AppCompatDialogStyle</item>
+    <item name="android:colorActivatedHighlight">@color/CorSuccess</item>
+	</style>
+	<style name="AppCompatDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+		<item name="colorAccent">#197da6</item>
+	</style>
+  <style name="MyTheme.Splash" parent ="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:windowBackground">@drawable/splash_screen</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowFullscreen">true</item>
+  </style>
+</resources>
