@@ -41,12 +41,12 @@ Rodrigo Landim – [@Landim32Oficial](https://twitter.com/landim32oficial) – r
 
 Distribuído sob a licença GPLv2. Veja `LICENSE` para mais informações.
 
-[https://github.com/landim32/LojaVirtual](https://github.com/landim32/LojaVirtual)
+[https://github.com/landim32/FreteApp](https://github.com/landim32/FreteApp)
 
 ## Contributing
 
-1. Faça o _fork_ do projeto (<https://github.com/landim32/LojaVirtual/fork>)
-2. Crie uma _branch_ para sua modificação (`git checkout -b landim32/LojaVirtual`)
+1. Faça o _fork_ do projeto (<https://github.com/landim32/FreteApp/fork>)
+2. Crie uma _branch_ para sua modificação (`git checkout -b landim32/FreteApp`)
 3. Faça o _commit_ (`git commit -am 'Add some fooBar'`)
-4. Push_ (`git push origin landim32/LojaVirtual`)
+4. Push_ (`git push origin landim32/FreteApp`)
 5. Crie um novo _Pull Request_
